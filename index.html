@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kerala LB 2025 | Prediction Engine</title>
+    <title>Kerala LB 2025 | BJP Performance Analysis</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -19,43 +16,20 @@
     <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        cyber: {
-                            black: '#0a0a0f',
-                            dark: '#13131f',
-                            panel: 'rgba(23, 25, 40, 0.75)',
-                            primary: '#00f0ff', // Cyan Blue (Base)
-                            high: '#39ff14',    // Neon Green
-                            medium: '#fcee0a',  // Yellow
-                            tight: '#ff7700',   // Orange
-                            text: '#e0e0e0',
-                            dim: '#8585a3'
-                        }
-                    },
-                    fontFamily: {
-                        headers: ['Orbitron', 'sans-serif'],
-                        body: ['Rajdhani', 'sans-serif'],
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    }
-                }
-            }
-        }
-    </script>
-
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
+            font-family: 'Rajdhani', sans-serif;
             background-color: #050508;
             background-image: 
                 linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
             background-size: 30px 30px;
             color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .glass-panel {
@@ -63,6 +37,8 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(0, 240, 255, 0.1);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
         }
         
         /* Scrollbar */
@@ -75,29 +51,216 @@
         .neon-text-green { text-shadow: 0 0 8px rgba(57, 255, 20, 0.6); }
         .neon-text-yellow { text-shadow: 0 0 5px rgba(252, 238, 10, 0.5); }
         .neon-text-orange { text-shadow: 0 0 5px rgba(255, 119, 0, 0.5); }
+        
+        .tab-button {
+            background: rgba(19, 19, 31, 0.5);
+            color: #8585a3;
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            padding: 0.75rem 1.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.875rem;
+            letter-spacing: 0.1em;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .tab-button:hover {
+            background: rgba(0, 240, 255, 0.1);
+            border-color: rgba(0, 240, 255, 0.3);
+        }
+        .tab-button.active {
+            background: rgba(0, 240, 255, 0.2);
+            color: #00f0ff;
+            border-color: #00f0ff;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Utility Classes */
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; width: 100%; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .sticky { position: sticky; }
+        .top-0 { top: 0; }
+        .z-50 { z-index: 50; }
+        .p-2 { padding: 0.5rem; }
+        .p-4 { padding: 1rem; }
+        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+        .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .text-xs { font-size: 0.75rem; line-height: 1rem; }
+        .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+        .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+        .text-xl { font-size: 1.25rem; line-height: 1.75rem; font-weight: 600; }
+        .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+        .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+        .text-4xl { font-size: 2.25rem; line-height: 2.5rem; font-weight: 700; }
+        .text-5xl { font-size: 3rem; line-height: 1; font-weight: 700; }
+        .font-bold { font-weight: 700; }
+        .font-semibold { font-weight: 600; }
+        .uppercase { text-transform: uppercase; }
+        .rounded { border-radius: 0.25rem; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .border { border-width: 1px; }
+        .border-l-4 { border-left-width: 4px; }
+        .w-full { width: 100%; }
+        .h-20 { height: 5rem; }
+        .space-y-8 > * + * { margin-top: 2rem; }
+        .overflow-x-auto { overflow-x: auto; }
+        .text-white { color: #ffffff; }
+        .text-gray-400 { color: #9ca3af; }
+        .text-right { text-align: right; }
+        .tracking-widest { letter-spacing: 0.1em; }
+        .hidden { display: none; }
+        .flex-grow { flex-grow: 1; }
+        .space-x-4 > * + * { margin-left: 1rem; }
+        .w-8 { width: 2rem; }
+        .h-8 { height: 2rem; }
+        .opacity-80 { opacity: 0.8; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .sm\:flex-row { flex-direction: row; }
+        .sm\:w-48 { width: 12rem; }
+        .xl\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        
+        .border-cyber-primary { border-color: #00f0ff; }
+        .bg-cyber-high { background-color: rgba(57, 255, 20, 0.1); }
+        .text-cyber-primary { color: #00f0ff; }
+        .text-cyber-high { color: #39ff14; }
+        .text-cyber-medium { color: #fcee0a; }
+        .text-cyber-tight { color: #ff7700; }
+        .border-cyber-high { border-color: rgba(57, 255, 20, 0.5); }
+        .border-t-2 { border-top-width: 2px; }
+        .border-t-cyber-primary { border-top-color: #00f0ff; }
+        .border-t-cyber-high { border-top-color: #39ff14; }
+        .border-t-cyber-medium { border-top-color: #fcee0a; }
+        .border-t-cyber-tight { border-top-color: #ff7700; }
+        
+        nav { 
+            background: rgba(19, 19, 31, 0.75); 
+            backdrop-filter: blur(12px); 
+            border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+            padding: 1rem 0;
+        }
+        nav .container { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+        }
+        nav svg { 
+            width: 2rem; 
+            height: 2rem; 
+        }
+        nav .flex.items-center.gap-4 {
+            margin-left: auto;
+        }
+        
+        main { flex-grow: 1; max-width: 1280px; margin: 0 auto; padding: 2rem 1rem; width: 100%; }
+        main > * + * { margin-top: 2rem; }
+        
+        input, select {
+            background: rgba(19, 19, 31, 0.75);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            color: #e0e0e0;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            width: 100%;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #00f0ff;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+        }
+        
+        .card {
+            background: rgba(19, 19, 31, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            border-color: rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        @media (min-width: 640px) {
+            .sm\:flex-row { flex-direction: row; }
+            .sm\:w-48 { width: 12rem; }
+        }
+        
+        @media (min-width: 768px) {
+            .md\:flex { display: flex; }
+            .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .md\:w-1\/3 { width: 33.333333%; }
+            .md\:w-auto { width: auto; }
+            .md\:flex-row { flex-direction: row; }
+        }
+        
+        @media (min-width: 1024px) {
+            .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .lg\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+            .lg\:col-span-2 { grid-column: span 2 / span 2; }
+        }
+        
+        @media (min-width: 1280px) {
+            .xl\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
     </style>
 </head>
-<body class="font-body min-h-screen flex flex-col">
+<body>
 
     <!-- Navbar -->
-    <nav class="glass-panel sticky top-0 z-50 border-b border-cyber-primary/30">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex items-center gap-3">
-                    <i data-lucide="cpu" class="text-cyber-primary w-8 h-8"></i>
-                    <div>
-                        <h1 class="font-headers font-bold text-2xl tracking-widest text-white neon-text">KERALA<span class="text-cyber-primary">2025</span></h1>
-                        <div class="text-xs text-cyber-primary tracking-widest uppercase opacity-80">Local Body BJP Performance Prediction Engine</div>
-                    </div>
+    <nav class="sticky top-0 z-50">
+        <div style="max-width: 1280px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between;">
+            <div class="flex items-center gap-3">
+                <i data-lucide="cpu" class="text-cyber-primary w-8 h-8"></i>
+                <div>
+                    <h1 class="font-headers font-bold text-2xl tracking-widest text-white neon-text">KERALA<span class="text-cyber-primary">2025</span></h1>
+                    <div class="text-xs text-cyber-primary tracking-widest uppercase opacity-80">Local Body BJP Performance Prediction Engine</div>
                 </div>
-                <div class="hidden md:flex items-center space-x-4">
-                    <div class="px-3 py-1 border border-cyber-high/50 rounded bg-cyber-high/10 text-cyber-high text-xs font-bold tracking-wider animate-pulse-slow">
-                        LIVE THREAD ANALYSIS
-                    </div>
-                    <div class="text-right">
-                        <div class="text-xs text-gray-400">STATUS</div>
-                        <div class="text-sm font-bold text-cyber-high">ONLINE</div>
-                    </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="px-3 py-1 border border-cyber-high rounded bg-cyber-high text-cyber-high text-xs font-bold tracking-widest animate-pulse-slow">
+                    LIVE THREAD ANALYSIS
+                </div>
+                <div class="text-right">
+                    <div class="text-xs text-gray-400">STATUS</div>
+                    <div class="text-sm font-bold text-cyber-high">ONLINE</div>
                 </div>
             </div>
         </div>
@@ -106,6 +269,24 @@
     <!-- Main Content -->
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
 
+        <!-- Tab Navigation -->
+        <section class="glass-panel rounded-lg p-2 border-l-4 border-cyber-primary">
+            <div class="flex gap-2">
+                <button onclick="switchTab('dheeraj')" id="tab-dheeraj" class="tab-button active">
+                    DHEERAJ ANALYSIS
+                </button>
+                <button onclick="switchTab('pi-team')" id="tab-pi-team" class="tab-button">
+                    PI TEAM ANALYSIS
+                </button>
+                <button onclick="switchTab('comparison')" id="tab-comparison" class="tab-button">
+                    COMPARISON VIEW
+                </button>
+            </div>
+        </section>
+
+        <!-- Dheeraj Tab Content -->
+        <div id="content-dheeraj" class="tab-content active">
+        
         <!-- Analytics Dashboard -->
         <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Stats Card -->
@@ -191,6 +372,192 @@
         <section id="gridContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pb-12">
             <!-- Cards will be injected here -->
         </section>
+        
+        </div>
+        <!-- End Dheeraj Tab -->
+        
+        <!-- PI Team Tab Content -->
+        <div id="content-pi-team" class="tab-content">
+            
+            <!-- PI Team Stats -->
+            <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- PI Team Stats Card -->
+                <div class="glass-panel border-t-2 border-t-cyber-primary p-6 rounded-lg">
+                    <h2 class="font-headers text-sm text-cyber-primary uppercase tracking-widest mb-1">PI Team Coverage</h2>
+                    <div class="text-5xl font-bold text-white neon-text mb-2" id="pi-total-count">0</div>
+                    <div class="text-xs text-gray-400 mb-4">Local Bodies Analyzed</div>
+                    
+                    <div class="grid grid-cols-3 gap-2 border-t border-gray-700/50 pt-4">
+                        <div class="text-center">
+                            <div class="text-[10px] text-cyber-high uppercase tracking-wider font-bold mb-1">Ahead</div>
+                            <div class="text-xl font-bold text-white" id="pi-ahead-count">0</div>
+                        </div>
+                        <div class="text-center border-l border-gray-700/50">
+                            <div class="text-[10px] text-cyber-medium uppercase tracking-wider font-bold mb-1">Deadheat</div>
+                            <div class="text-xl font-bold text-white" id="pi-deadheat-count">0</div>
+                        </div>
+                        <div class="text-center border-l border-gray-700/50">
+                            <div class="text-[10px] text-cyber-tight uppercase tracking-wider font-bold mb-1">Behind</div>
+                            <div class="text-xl font-bold text-white" id="pi-behind-count">0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- PI Team District Chart -->
+                <div class="glass-panel p-4 rounded-lg flex flex-col border-t-2 border-t-cyber-primary">
+                    <h3 class="font-headers text-xs text-cyber-primary tracking-widest uppercase mb-4 text-center">PI Team District Coverage</h3>
+                    <div class="relative flex-grow h-48">
+                        <canvas id="piDistrictChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- PI Team Seat Predictions Chart -->
+                <div class="glass-panel p-4 rounded-lg flex flex-col border-t-2 border-t-cyber-primary">
+                    <h3 class="font-headers text-xs text-cyber-primary tracking-widest uppercase mb-4 text-center">Seat Call Distribution</h3>
+                    <div class="relative flex-grow h-48 flex justify-center">
+                        <canvas id="piSeatCallChart"></canvas>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- PI Team Filters -->
+            <section class="glass-panel p-6 rounded-lg border-l-4 border-cyber-primary mt-8">
+                <div class="flex flex-col md:flex-row gap-4 items-end md:items-center justify-between">
+                    <div class="w-full md:w-1/3 relative">
+                        <label class="block text-xs font-headers text-cyber-primary mb-1 tracking-widest">SEARCH DATABASE</label>
+                        <div class="relative">
+                            <i data-lucide="search" class="absolute left-3 top-3 w-5 h-5 text-cyber-primary"></i>
+                            <input type="text" id="piSearchInput" placeholder="Find Panchayat, Municipality..." 
+                                class="w-full bg-cyber-black border border-cyber-primary/30 text-white pl-10 pr-4 py-2 rounded focus:outline-none focus:border-cyber-primary focus:shadow-[0_0_10px_rgba(0,240,255,0.3)] transition-all font-body text-lg placeholder-gray-600">
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                        <div class="w-full sm:w-48">
+                            <label class="block text-xs font-headers text-cyber-primary mb-1 tracking-widest">DISTRICT FILTER</label>
+                            <select id="piDistrictFilter" class="w-full bg-cyber-black border border-cyber-primary/30 text-white px-4 py-2 rounded focus:outline-none focus:border-cyber-primary appearance-none cursor-pointer hover:bg-cyber-dark transition-colors">
+                                <option value="All">All Districts</option>
+                            </select>
+                        </div>
+                        
+                        <div class="w-full sm:w-48">
+                            <label class="block text-xs font-headers text-cyber-primary mb-1 tracking-widest">SEAT CALL</label>
+                            <select id="piSeatCallFilter" class="w-full bg-cyber-black border border-cyber-primary/30 text-white px-4 py-2 rounded focus:outline-none focus:border-cyber-primary appearance-none cursor-pointer hover:bg-cyber-dark transition-colors">
+                                <option value="All">All Status</option>
+                                <option value="BJP Ahead" class="text-cyber-high">BJP Ahead</option>
+                                <option value="Deadheat" class="text-cyber-medium">Deadheat</option>
+                                <option value="BJP Behind" class="text-cyber-tight">BJP Behind</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- PI Team Data Grid -->
+            <section id="piGridContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pb-12 mt-8">
+                <!-- PI Team cards will be injected here -->
+            </section>
+            
+        </div>
+        <!-- End PI Team Tab -->
+        
+        <!-- Comparison Tab Content -->
+        <div id="content-comparison" class="tab-content">
+            
+            <!-- Comparison Stats -->
+            <section class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <div class="glass-panel border-t-2 border-t-cyber-primary p-6 rounded-lg">
+                    <h2 class="font-headers text-sm text-cyber-primary uppercase tracking-widest mb-1">Total Coverage</h2>
+                    <div class="text-4xl font-bold text-white neon-text mb-2" id="comp-total">0</div>
+                    <div class="text-xs text-gray-400">Unique Local Bodies</div>
+                </div>
+                
+                <div class="glass-panel border-t-2 border-t-cyber-high p-6 rounded-lg">
+                    <h2 class="font-headers text-sm text-cyber-high uppercase tracking-widest mb-1">Both Sources</h2>
+                    <div class="text-4xl font-bold text-white neon-text-green mb-2" id="comp-both">0</div>
+                    <div class="text-xs text-gray-400">Analyzed by Both</div>
+                </div>
+                
+                <div class="glass-panel border-t-2 border-t-cyber-medium p-6 rounded-lg">
+                    <h2 class="font-headers text-sm text-cyber-medium uppercase tracking-widest mb-1">Dheeraj Only</h2>
+                    <div class="text-4xl font-bold text-white neon-text-yellow mb-2" id="comp-dheeraj-only">0</div>
+                    <div class="text-xs text-gray-400">Unique to Dheeraj</div>
+                </div>
+                
+                <div class="glass-panel border-t-2 border-t-cyber-tight p-6 rounded-lg">
+                    <h2 class="font-headers text-sm text-cyber-tight uppercase tracking-widest mb-1">PI Team Only</h2>
+                    <div class="text-4xl font-bold text-white neon-text-orange mb-2" id="comp-pi-only">0</div>
+                    <div class="text-xs text-gray-400">Unique to PI Team</div>
+                </div>
+            </section>
+            
+            <!-- Comparison Charts -->
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+                <!-- Source Coverage Chart -->
+                <div class="glass-panel p-6 rounded-lg border-l-4 border-cyber-primary">
+                    <h2 class="font-headers text-xl text-cyber-primary uppercase tracking-widest mb-6">Source Coverage</h2>
+                    <div class="relative" style="height: 300px;">
+                        <canvas id="sourceCoverageChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Confidence Comparison Chart -->
+                <div class="glass-panel p-6 rounded-lg border-l-4 border-cyber-high">
+                    <h2 class="font-headers text-xl text-cyber-high uppercase tracking-widest mb-6">Prediction Confidence Comparison</h2>
+                    <div class="relative" style="height: 300px;">
+                        <canvas id="confidenceComparisonChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- District Coverage Comparison -->
+                <div class="glass-panel p-6 rounded-lg border-l-4 border-cyber-medium col-span-1 lg:col-span-2">
+                    <h2 class="font-headers text-xl text-cyber-medium uppercase tracking-widest mb-6">District-wise Coverage Comparison</h2>
+                    <div class="relative" style="height: 400px;">
+                        <canvas id="districtCoverageChart"></canvas>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Comparison Filters -->
+            <section class="glass-panel p-6 rounded-lg border-l-4 border-cyber-primary mt-8">
+                <div class="flex flex-col md:flex-row gap-4 items-end md:items-center justify-between">
+                    <div class="w-full md:w-1/3 relative">
+                        <label class="block text-xs font-headers text-cyber-primary mb-1 tracking-widest">SEARCH DATABASE</label>
+                        <div class="relative">
+                            <i data-lucide="search" class="absolute left-3 top-3 w-5 h-5 text-cyber-primary"></i>
+                            <input type="text" id="compSearchInput" placeholder="Find Panchayat, Municipality..." 
+                                class="w-full bg-cyber-black border border-cyber-primary/30 text-white pl-10 pr-4 py-2 rounded focus:outline-none focus:border-cyber-primary focus:shadow-[0_0_10px_rgba(0,240,255,0.3)] transition-all font-body text-lg placeholder-gray-600">
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                        <div class="w-full sm:w-48">
+                            <label class="block text-xs font-headers text-cyber-primary mb-1 tracking-widest">DISTRICT FILTER</label>
+                            <select id="compDistrictFilter" class="w-full bg-cyber-black border border-cyber-primary/30 text-white px-4 py-2 rounded focus:outline-none focus:border-cyber-primary appearance-none cursor-pointer hover:bg-cyber-dark transition-colors">
+                                <option value="All">All Districts</option>
+                            </select>
+                        </div>
+                        
+                        <div class="w-full sm:w-48">
+                            <label class="block text-xs font-headers text-cyber-primary mb-1 tracking-widest">VIEW TYPE</label>
+                            <select id="compViewFilter" class="w-full bg-cyber-black border border-cyber-primary/30 text-white px-4 py-2 rounded focus:outline-none focus:border-cyber-primary appearance-none cursor-pointer hover:bg-cyber-dark transition-colors">
+                                <option value="All">All Local Bodies</option>
+                                <option value="Both">Both Sources Available</option>
+                                <option value="DheerajOnly">Dheeraj Only</option>
+                                <option value="PIOnly">PI Team Only</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Comparison Grid -->
+            <section id="compGridContainer" class="grid grid-cols-1 gap-6 pb-12 mt-8">
+                <!-- Comparison cards will be injected here -->
+            </section>
+            
+        </div>
+        <!-- End Comparison Tab -->
 
     </main>
 
@@ -206,7 +573,53 @@
         // Initialize Icons
         lucide.createIcons();
 
-        // --- DATASET ---
+        // --- FUZZY MATCHING FUNCTION ---
+        function fuzzyMatch(str1, str2) {
+            if (!str1 || !str2) return 0;
+            const s1 = str1.toLowerCase().trim().replace(/[^a-z0-9]/g, '');
+            const s2 = str2.toLowerCase().trim().replace(/[^a-z0-9]/g, '');
+            
+            if (s1 === s2) return 1.0;
+            
+            // Levenshtein distance
+            const len1 = s1.length, len2 = s2.length;
+            const matrix = Array(len1 + 1).fill(null).map(() => Array(len2 + 1).fill(0));
+            
+            for (let i = 0; i <= len1; i++) matrix[i][0] = i;
+            for (let j = 0; j <= len2; j++) matrix[0][j] = j;
+            
+            for (let i = 1; i <= len1; i++) {
+                for (let j = 1; j <= len2; j++) {
+                    const cost = s1[i-1] === s2[j-1] ? 0 : 1;
+                    matrix[i][j] = Math.min(
+                        matrix[i-1][j] + 1,
+                        matrix[i][j-1] + 1,
+                        matrix[i-1][j-1] + cost
+                    );
+                }
+            }
+            
+            const distance = matrix[len1][len2];
+            const maxLen = Math.max(len1, len2);
+            return maxLen === 0 ? 1 : 1 - (distance / maxLen);
+        }
+        
+        function findBestMatch(name, list) {
+            let bestMatch = null;
+            let bestScore = 0;
+            
+            for (const item of list) {
+                const score = fuzzyMatch(name, item.name);
+                if (score > bestScore && score > 0.75) { // 75% similarity threshold
+                    bestScore = score;
+                    bestMatch = item;
+                }
+            }
+            
+            return bestMatch;
+        }
+
+        // --- DHEERAJ DATASET ---
         const rawData = [
             { name: "Chemmaruthy", district: "Trivandrum", type: "Panchayat", prob: "High", h_dem: "85%+", ls_lead: "61%", note: "BJP led 61% of booths. Main opposition (6 seats). Grassroot growth." },
             { name: "Kodungallur", district: "Thrissur", type: "Municipality", prob: "High", h_dem: "High", ls_lead: "High", note: "Lost by 1 seat in 2020. Highest vote share in state. Sympathy wave expected." },
@@ -347,10 +760,677 @@
             { name: "Kottangal", district: "Pathanamthitta", type: "Panchayat", prob: "Tight", h_dem: "Minority H", ls_lead: "29% vote", note: "Narrow chance to win plurality based on split of minority votes." }
         ];
 
+        // --- PI TEAM DATASET ---
+        const piTeamData = [
+            { name: "Badiadka", district: "Kasargod", type: "Grama Panchayat", team: "Team 3", date: "3 December", seatCall: "Deadheat", bjpSeats: "9", ldfSeats: "2", udfSeats: "9", others: "1", reasoning: "The BJP is expected to improve its performance and is running a robust, targeted campaign..." },
+            { name: "Bellur", district: "Kasargod", type: "Grama Panchayat", team: "Team 3", date: "5 December", seatCall: "", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "" },
+            { name: "Kasaragod", district: "Kasargod", type: "Municipality", team: "Team 3", date: "3 December", seatCall: "BJP Behind", bjpSeats: "13", ldfSeats: "", udfSeats: "19", others: "4", reasoning: "The BJP is certain to win 13 wards and is actively contesting three others..." },
+            { name: "Madhur", district: "Kasargod", type: "Grama Panchayat", team: "Team 3", date: "3 December", seatCall: "BJP Ahead", bjpSeats: "13", ldfSeats: "2", udfSeats: "6", others: "", reasoning: "The BJP is projected to retain the panchayat this time..." },
+            { name: "Enmakaje", district: "Kasargod", type: "Grama Panchayat", team: "Team 3", date: "5 December", seatCall: "", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "" },
+            { name: "Meenja", district: "Kasargod", type: "Grama Panchayat", team: "Team 3", date: "4 December", seatCall: "Deadheat", bjpSeats: "8", ldfSeats: "1", udfSeats: "8", others: "", reasoning: "The BJP is experiencing a strong, high-visibility campaign..." },
+            { name: "Paivalike", district: "Kasargod", type: "Grama Panchayat", team: "Team 3", date: "4 December", seatCall: "Deadheat", bjpSeats: "9", ldfSeats: "2", udfSeats: "9", others: "", reasoning: "The election features a direct fight between the BJP and LDF..." },
+            { name: "Vorkady", district: "Kasargod", type: "Grama Panchayat", team: "Team 3", date: "4 December", seatCall: "Deadheat", bjpSeats: "9", ldfSeats: "0", udfSeats: "10", others: "", reasoning: "The BJP is set to retain all its current wards..." },
+            { name: "Dharmadom", district: "Kannur", type: "Grama Panchayat", team: "Team 3", date: "2 December", seatCall: "BJP Behind", bjpSeats: "3", ldfSeats: "15", udfSeats: "1", others: "1", reasoning: "The LDF is expected to maintain control..." },
+            { name: "Thalassery", district: "Kannur", type: "Municipality", team: "Team 3", date: "2 December", seatCall: "BJP Behind", bjpSeats: "10", ldfSeats: "37", udfSeats: "6", others: "1", reasoning: "The LDF will likely retain control of the municipality..." },
+            { name: "Kollengode", district: "Palakkad", type: "Grama Panchayat", team: "Team 7", date: "2 December", seatCall: "", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "" },
+            { name: "Parli", district: "Palakkad", type: "Grama Panchayat", team: "Team 7", date: "3 December", seatCall: "BJP Ahead", bjpSeats: "13 - 16", ldfSeats: "5 - 7", udfSeats: "1 - 2", others: "", reasoning: "There is strong anti-incumbency in the GP..." },
+            { name: "Akathethara", district: "Palakkad", type: "Grama Panchayat", team: "Team 7", date: "4 December", seatCall: "BJP Ahead", bjpSeats: "10", ldfSeats: "7-9", udfSeats: "1-2", others: "", reasoning: "There is strong public sentiment that the BJP will win..." },
+            { name: "Malampuzha", district: "Palakkad", type: "Grama Panchayat", team: "Team 7", date: "4 December", seatCall: "Deadheat", bjpSeats: "5-7", ldfSeats: "5-7", udfSeats: "2-4", others: "", reasoning: "No front is likely to have a majority..." },
+            { name: "Mundur", district: "Palakkad", type: "Grama Panchayat", team: "Team 7", date: "3 December", seatCall: "BJP Behind", bjpSeats: "5 - 6", ldfSeats: "11", udfSeats: "2", others: "", reasoning: "The CPI(M) is expected to lose around 2 wards but still retain..." },
+            { name: "Palakkad", district: "Palakkad", type: "Municipality", team: "Team 7", date: "2 December", seatCall: "", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "" },
+            { name: "Elappully", district: "Palakkad", type: "Grama Panchayat", team: "Team 7", date: "4 December", seatCall: "BJP Behind", bjpSeats: "6-8", ldfSeats: "10-12", udfSeats: "3-4", others: "", reasoning: "The public sees the LDF as likely to win..." },
+            { name: "Ottappalam", district: "Palakkad", type: "Municipality", team: "Team 7", date: "2 December", seatCall: "BJP Behind", bjpSeats: "10", ldfSeats: "16", udfSeats: "10", others: "", reasoning: "There is no major anti-incumbency against the municipality..." },
+            { name: "Ambalapara", district: "Palakkad", type: "Grama Panchayat", team: "Team 7", date: "4 December", seatCall: "BJP Behind", bjpSeats: "5-7", ldfSeats: "12-13", udfSeats: "2-3", others: "2-4", reasoning: "Two independent groups are expected to damage the INC's prospects..." },
+            { name: "Shornur", district: "Palakkad", type: "Municipality", team: "Team 7", date: "2 December", seatCall: "Deadheat", bjpSeats: "13 - 15", ldfSeats: "15 - 20", udfSeats: "4 - 7", others: "", reasoning: "There is strong anti-incumbency against the Shornur municipality..." },
+            { name: "Vaniyamkulam", district: "Palakkad", type: "Grama Panchayat", team: "Team 7", date: "2 December", seatCall: "Deadheat", bjpSeats: "8 - 11", ldfSeats: "8 - 11", udfSeats: "0 - 2", others: "", reasoning: "Vaniyamkulam Panchayat is currently ruled by CPI(M)..." },
+            { name: "Thiruvilwamala", district: "Thrissur", type: "Grama Panchayat", team: "Team 12", date: "2 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "The BJP is working with the goal of winning 12 out of 19 wards..." },
+            { name: "Guruvayoor", district: "Thrissur", type: "Municipality", team: "Team 12", date: "2 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "The BJP is expected to make significant gains..." },
+            { name: "Chowannur", district: "Thrissur", type: "Grama Panchayat", team: "Team 12", date: "4 December", seatCall: "BJP Behind", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Chowannur is expected to remain largely unchanged..." },
+            { name: "Kunnamakulam", district: "Thrissur", type: "Municipality", team: "Team 12", date: "4 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Kunnamkulam is witnessing a strong triangular contest..." },
+            { name: "Cherpu", district: "Thrissur", type: "Grama Panchayat", team: "Team 11", date: "4 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "" },
+            { name: "Elavally", district: "Thrissur", type: "Grama Panchayat", team: "Team 11", date: "4 December", seatCall: "Deadheat", bjpSeats: "5 - 6", ldfSeats: "10", udfSeats: "2 - 3", others: "0", reasoning: "In Elavally Panchayat, the contest is shaping into a triangular fight..." },
+            { name: "Vadanappilly", district: "Thrissur", type: "Grama Panchayat", team: "Team 11", date: "4 December", seatCall: "Deadheat", bjpSeats: "5 - 8", ldfSeats: "10 - 11", udfSeats: "1", others: "2 - 3", reasoning: "In Vadanappally Panchayat, the core contest is between the LDF and the BJP..." },
+            { name: "Nattika", district: "Thrissur", type: "Grama Panchayat", team: "Team 11", date: "5 December", seatCall: "Deadheat", bjpSeats: "3 -5", ldfSeats: "5–6", udfSeats: "3–4", others: "-", reasoning: "In Nattika Panchayat, the BJP is expected to improve its position..." },
+            { name: "Valappad", district: "Thrissur", type: "Grama Panchayat", team: "Team 11", date: "5 December", seatCall: "BJP Behind", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "" },
+            { name: "Thrissur", district: "Thrissur", type: "Corporation", team: "Team 11", date: "2 December", seatCall: "BJP Behind", bjpSeats: "8-12", ldfSeats: "", udfSeats: "", others: "", reasoning: "Thrissur Corporation is a major centre of Christian institutional influence..." },
+            { name: "Velookkara", district: "Thrissur", type: "Grama Panchayat", team: "Team 12", date: "3 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Velookkara Panchayat shows strong upward momentum for the BJP..." },
+            { name: "Edavilangu", district: "Thrissur", type: "Grama Panchayat", team: "Team 12", date: "4 December", seatCall: "BJP Behind", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Edavilangu panchayat continues to witness a direct contest..." },
+            { name: "Sree Narayanapuram", district: "Thrissur", type: "Grama Panchayat", team: "Team 12", date: "4 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Sreenarayanapuram, a coastal panchayat traditionally leaning Left..." },
+            { name: "Kodungallur", district: "Thrissur", type: "Municipality", team: "Team 12", date: "5 December", seatCall: "", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "" },
+            { name: "Chirakkadavu", district: "Kottayam", type: "Grama Panchayat", team: "Team 6", date: "4 December", seatCall: "BJP Behind", bjpSeats: "6-8", ldfSeats: "10-15", udfSeats: "2-4", others: "", reasoning: "Chirakkadavu Panchayat is moderately favourable for the BJP..." },
+            { name: "Poonjar", district: "Kottayam", type: "Grama Panchayat", team: "Team 6", date: "3 December", seatCall: "BJP Behind", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "BJP has a notable vote base in Poonjar..." },
+            { name: "Poonjar Thekkekkara", district: "Kottayam", type: "Grama Panchayat", team: "Team 6", date: "4 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Poonjar Thekkekkara began booth-level work early..." },
+            { name: "Nedumkunnam", district: "Kottayam", type: "Grama Panchayat", team: "Team 6", date: "4 December", seatCall: "BJP Behind", bjpSeats: "1", ldfSeats: "", udfSeats: "", others: "", reasoning: "The demographics of the Panchayat are unfavourable..." },
+            { name: "Karukachal", district: "Kottayam", type: "Grama Panchayat", team: "Team 6", date: "4 December", seatCall: "BJP Behind", bjpSeats: "1-3", ldfSeats: "9-11", udfSeats: "3-5", others: "0-2", reasoning: "The BJP currently has one member in the Panchayat..." },
+            { name: "Thidanadu", district: "Kottayam", type: "Grama Panchayat", team: "Team 6", date: "3 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "BJP has rapidly strengthened its base in Thidanad..." },
+            { name: "Meenachil", district: "Kottayam", type: "Grama Panchayat", team: "Team 6", date: "2 December", seatCall: "BJP Behind", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "In Meenachil Grama Panchayat, the BJP's campaign is weak..." },
+            { name: "Kidangoor", district: "Kottayam", type: "Grama Panchayat", team: "Team 6", date: "2 December", seatCall: "BJP Ahead", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "BJP is running a strong campaign in Kidangoor..." },
+            { name: "Aymanam", district: "Kottayam", type: "Grama Panchayat", team: "Team 6", date: "2 December", seatCall: "Deadheat", bjpSeats: "8-11", ldfSeats: "8-10", udfSeats: "2", others: "0", reasoning: "The party currently has 7 seats in this Panchayat..." },
+            { name: "Mutholy", district: "Kottayam", type: "Grama Panchayat", team: "Team 6", date: "2 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "In Mutholi Grama Panchayat, the BJP is facing tough competition..." },
+            { name: "Vaikom", district: "Kottayam", type: "Municipality", team: "Team 6", date: "2 December", seatCall: "BJP Behind", bjpSeats: "1", ldfSeats: "", udfSeats: "", others: "", reasoning: "The RSS had targeted 9 wards as very winnable..." },
+            { name: "Tripunithura", district: "Ernakulam", type: "Municipality", team: "Team 1", date: "5 December", seatCall: "", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "" },
+            { name: "Vattavada", district: "Idukki", type: "Grama Panchayat", team: "Team 6", date: "5 December", seatCall: "", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "" },
+            { name: "Ala", district: "Alappuzha", type: "Grama Panchayat", team: "Team 2", date: "2 December", seatCall: "BJP Ahead", bjpSeats: "8", ldfSeats: "5", udfSeats: "1", others: "", reasoning: "The BJP is ahead because of exceptional organizational coordination..." },
+            { name: "Mulakkuzha", district: "Alappuzha", type: "Grama Panchayat", team: "Team 2", date: "2 December", seatCall: "BJP Behind", bjpSeats: "6", ldfSeats: "11", udfSeats: "2", others: "", reasoning: "The BJP faces a tough uphill battle in Mulakuzha..." },
+            { name: "Pandanad", district: "Alappuzha", type: "Grama Panchayat", team: "Team 2", date: "2 December", seatCall: "BJP Ahead", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "The BJP is positioned to win in Pandanad..." },
+            { name: "Thiruvanvandoor", district: "Alappuzha", type: "Grama Panchayat", team: "Team 2", date: "2 December", seatCall: "BJP Ahead", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "The BJP has secured a dominant position..." },
+            { name: "Venmony", district: "Alappuzha", type: "Grama Panchayat", team: "Team 2", date: "3 December", seatCall: "BJP Ahead", bjpSeats: "8", ldfSeats: "", udfSeats: "", others: "", reasoning: "The BJP is positioned to win 8 seats..." },
+            { name: "Chettikulangara", district: "Alappuzha", type: "Grama Panchayat", team: "Team 2", date: "4 December", seatCall: "BJP Behind", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "The BJP aims to secure 8-9 wards..." },
+            { name: "Krishnapuram", district: "Alappuzha", type: "Grama Panchayat", team: "Team 2", date: "4 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "The BJP aims to increase its tally from 4 seats..." },
+            { name: "Devikulangara", district: "Alappuzha", type: "Grama Panchayat", team: "Team 2", date: "4 December", seatCall: "BJP Behind", bjpSeats: "6 - 7", ldfSeats: "", udfSeats: "", others: "", reasoning: "The BJP aims to secure 6-7 wards..." },
+            { name: "Pathiyoor", district: "Alappuzha", type: "Grama Panchayat", team: "Team 2", date: "4 December", seatCall: "BJP Behind", bjpSeats: "9", ldfSeats: "", udfSeats: "", others: "", reasoning: "The BJP aims to win upto 9 wards..." },
+            { name: "Budhannur", district: "Alappuzha", type: "Grama Panchayat", team: "Team 2", date: "3 December", seatCall: "BJP Behind", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "The BJP's biggest advantage here comes from the CPM's internal rebellion..." },
+            { name: "Chennithala -Thripperuthura", district: "Alappuzha", type: "Grama Panchayat", team: "Team 2", date: "3 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "The BJP is aiming to win the Panchayat this time..." },
+            { name: "Puliyur", district: "Alappuzha", type: "Grama Panchayat", team: "Team 2", date: "2 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "The BJP is in a strong position by leading in 6 out of 8 target wards..." },
+            { name: "Mavelikkara -Thamarakkulam", district: "Alappuzha", type: "Grama Panchayat", team: "Team 2", date: "3 December", seatCall: "BJP Behind", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "The BJP is capitalising on the collapse of the LDF..." },
+            { name: "Thazhakkara", district: "Alappuzha", type: "Grama Panchayat", team: "Team 2", date: "3 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "The BJP is ambitious in this election..." },
+            { name: "Earathu", district: "Pathanamthitta", type: "Grama Panchayat", team: "Team 8", date: "3 December", seatCall: "BJP Behind", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Out of total 17 seats 11 seats are witnessing triangular contest..." },
+            { name: "Naranganam", district: "Pathanamthitta", type: "Grama Panchayat", team: "Team 8", date: "2 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Naranganam panchayath is witnessing a triangular fight..." },
+            { name: "Malayalapuzha", district: "Pathanamthitta", type: "Grama Panchayat", team: "Team 8", date: "2 December", seatCall: "BJP Behind", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Malayalappuzha is witnessing fight between LDF and BJP..." },
+            { name: "Kalanjoor", district: "Pathanamthitta", type: "Grama Panchayat", team: "Team 8", date: "3 December", seatCall: "BJP Behind", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "The BJP is targeting 11 seats in Kalanjoor..." },
+            { name: "Pandalam", district: "Pathanamthitta", type: "Municipality", team: "Team 8", date: "3 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "The BJP is in a dead heat despite favorable demographics..." },
+            { name: "Panthalam-Thekkekkara", district: "Pathanamthitta", type: "Grama Panchayat", team: "Team 8", date: "3 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "With a target of 10 out of 15 seats, the BJP has a strong chance..." },
+            { name: "Kulanada", district: "Pathanamthitta", type: "Grama Panchayat", team: "Team 8", date: "3 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "BJP, currently holding 8 seats in Kulanada Panchayath..." },
+            { name: "Omalloor", district: "Pathanamthitta", type: "Grama Panchayat", team: "Team 8", date: "2 December", seatCall: "BJP Behind", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Omalloor is witnessing a triangular fight with LDF has an edge..." },
+            { name: "Ranny Perunadu", district: "Pathanamthitta", type: "Grama Panchayat", team: "Team 8", date: "4 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Among the 15 seats BJP is aiming to capture power..." },
+            { name: "Mylom", district: "Kollam", type: "Grama Panchayat", team: "Team 4", date: "3 December", seatCall: "BJP Ahead", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Mylom Grama Panchayat has strong BJP potential..." },
+            { name: "Ummannoor", district: "Kollam", type: "Grama Panchayat", team: "Team 4", date: "3 December", seatCall: "BJP Behind", bjpSeats: "4", ldfSeats: "12", udfSeats: "4", others: "2", reasoning: "Ummannoor Grama Panchayat remains a strong LDF bastion..." },
+            { name: "Kunnathur", district: "Kollam", type: "Grama Panchayat", team: "Team 4", date: "4 December", seatCall: "BJP Behind", bjpSeats: "5", ldfSeats: "9", udfSeats: "2", others: "1", reasoning: "Kunnathur Panchayat is poised to remain under LDF influence..." },
+            { name: "Pavithreswaram", district: "Kollam", type: "Grama Panchayat", team: "Team 4", date: "4 December", seatCall: "BJP Behind", bjpSeats: "5", ldfSeats: "14", udfSeats: "2", others: "1", reasoning: "Pavithreshwaram Panchayat is strongly positioned to remain with the LDF..." },
+            { name: "Poruvazhi", district: "Kollam", type: "Grama Panchayat", team: "Team 4", date: "4 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "BJP currently holds five wards in Poruvazhy..." },
+            { name: "Kareepra", district: "Kollam", type: "Grama Panchayat", team: "Team 4", date: "3 December", seatCall: "BJP Behind", bjpSeats: "7", ldfSeats: "10", udfSeats: "1", others: "1", reasoning: "Kareepra Panchayat shows a significantly favourable landscape..." },
+            { name: "Neduvathur", district: "Kollam", type: "Grama Panchayat", team: "Team 4", date: "3 December", seatCall: "BJP Ahead", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Neduvathur Grama Panchayat has 19 seats..." },
+            { name: "Chathannur", district: "Kollam", type: "Grama Panchayat", team: "Team 5", date: "3 December", seatCall: "BJP Behind", bjpSeats: "4-6", ldfSeats: "6-8", udfSeats: "5-6", others: "0-1", reasoning: "BJP is slightly trailing overall..." },
+            { name: "Adichanaloor", district: "Kollam", type: "Grama Panchayat", team: "Team 5", date: "3 December", seatCall: "Deadheat", bjpSeats: "8-10", ldfSeats: "8-10", udfSeats: "4-5", others: "0-1", reasoning: "BJP is in a dead heat with the LDF..." },
+            { name: "Chirakkara", district: "Kollam", type: "Grama Panchayat", team: "Team 5", date: "2 December", seatCall: "BJP Behind", bjpSeats: "5-6", ldfSeats: "6-7", udfSeats: "4-5", others: "0-1", reasoning: "The BJP remains behind overall due to a weak organisational structure..." },
+            { name: "Kollam", district: "Kollam", type: "Corporation", team: "Team 4", date: "2 December", seatCall: "BJP Behind", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Post-delimitation, the 56 wards of Kollam Corporation..." },
+            { name: "Elampalloor", district: "Kollam", type: "Grama Panchayat", team: "Team 5", date: "4 December", seatCall: "", bjpSeats: "7-8", ldfSeats: "7-8", udfSeats: "4-5", others: "", reasoning: "" },
+            { name: "Perinad", district: "Kollam", type: "Grama Panchayat", team: "Team 5", date: "4 December", seatCall: "", bjpSeats: "8-9", ldfSeats: "8-9", udfSeats: "3-4", others: "", reasoning: "" },
+            { name: "Kalluvathukkal", district: "Kollam", type: "Grama Panchayat", team: "Team 5", date: "3 December", seatCall: "BJP Behind", bjpSeats: "6-7", ldfSeats: "9-10", udfSeats: "2-3", others: "1-2", reasoning: "BJP has stepped up its activities compared to 2023..." },
+            { name: "Poothakulam", district: "Kollam", type: "Grama Panchayat", team: "Team 5", date: "2 December", seatCall: "BJP Behind", bjpSeats: "6-7", ldfSeats: "8-10", udfSeats: "3-4", others: "0-1", reasoning: "Although this panchayat was a targeted one..." },
+            { name: "Paravoor", district: "Kollam", type: "Municipality", team: "Team 5", date: "2 December", seatCall: "BJP Behind", bjpSeats: "7-8", ldfSeats: "17-18", udfSeats: "4-5", others: "1-2", reasoning: "The BJP remains behind overall due to strong Muslim consolidation..." },
+            { name: "Attingal", district: "Trivandrum", type: "Municipality", team: "Team 9", date: "2 December", seatCall: "Deadheat", bjpSeats: "10-12", ldfSeats: "20-22", udfSeats: "4-5", others: "N/A", reasoning: "Attingal is likely to remain with the LDF..." },
+            { name: "Ottoor", district: "Trivandrum", type: "Grama Panchayat", team: "Team 9", date: "2 December", seatCall: "BJP Ahead", bjpSeats: "7", ldfSeats: "4", udfSeats: "3", others: "3", reasoning: "Ottur has 13 seats, with BJP currently holding 3..." },
+            { name: "Vakkom", district: "Trivandrum", type: "Grama Panchayat", team: "Team 9", date: "2 December", seatCall: "Deadheat", bjpSeats: "5 - 7", ldfSeats: "3", udfSeats: "3", others: "1", reasoning: "The UDF is currently in power, but the incumbent is facing serious allegations..." },
+            { name: "Mudakkal", district: "Trivandrum", type: "Grama Panchayat", team: "Team 9", date: "2 December", seatCall: "Deadheat", bjpSeats: "4 - 6", ldfSeats: "10", udfSeats: "5- 6", others: "0", reasoning: "In Mudakkal, there is a tight fight between LDF and BJP..." },
+            { name: "Pulimath", district: "Trivandrum", type: "Grama Panchayat", team: "Team 9", date: "4 December", seatCall: "BJP Behind", bjpSeats: "2 -3", ldfSeats: "9 - 10", udfSeats: "7 - 9", others: "1", reasoning: "In Pulimath, BJP is facing organisational issues..." },
+            { name: "Kilimanoor", district: "Trivandrum", type: "Grama Panchayat", team: "Team 9", date: "4 December", seatCall: "BJP Behind", bjpSeats: "1- 3", ldfSeats: "8 to 9", udfSeats: "4 - 6", others: "0", reasoning: "Kilimanoor has no major fight; it is a strong LDF area..." },
+            { name: "Nedumangad", district: "Trivandrum", type: "Municipality", team: "Team 9", date: "3 December", seatCall: "BJP Behind", bjpSeats: "8 to 12", ldfSeats: "15to 17", udfSeats: "9 to 10", others: "1", reasoning: "There is a tight competition between the LDF and BJP..." },
+            { name: "Pothencode", district: "Trivandrum", type: "Grama Panchayat", team: "Team 9", date: "3 December", seatCall: "BJP Behind", bjpSeats: "6 to 7", ldfSeats: "9 to 10", udfSeats: "2 to 3", others: "", reasoning: "BJP currently has 4 seats, all of which have a high chance of being retained..." },
+            { name: "Kallara", district: "Trivandrum", type: "Grama Panchayat", team: "Team 9", date: "4 December", seatCall: "BJP Behind", bjpSeats: "1 - 3", ldfSeats: "5 - 8", udfSeats: "6 -12", others: "0", reasoning: "Kallara is a strong UDF area..." },
+            { name: "Vamanapuram", district: "Trivandrum", type: "Grama Panchayat", team: "Team 9", date: "4 December", seatCall: "BJP Behind", bjpSeats: "2 - 3", ldfSeats: "5 - 8", udfSeats: "5 - 7", others: "N/A", reasoning: "In this area, visible anti-incumbency against the current LDF..." },
+            { name: "Thiruvananthapuram", district: "Trivandrum", type: "Corporation", team: "", date: "", seatCall: "", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "" },
+            { name: "Vellanad", district: "Trivandrum", type: "Grama Panchayat", team: "Team 10", date: "2 December", seatCall: "BJP Behind", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Field data shows big expectations (9–12 seats)..." },
+            { name: "Balaramapuram", district: "Trivandrum", type: "Grama Panchayat", team: "Team 10", date: "4 December", seatCall: "Deadheat", bjpSeats: "7 - 8", ldfSeats: "8 - 10", udfSeats: "4 - 5", others: "0 - 2", reasoning: "LDF is currently positioned strongest in the panchayat..." },
+            { name: "Kottukal", district: "Trivandrum", type: "Grama Panchayat", team: "Team 10", date: "4 December", seatCall: "BJP Behind", bjpSeats: "3 - 4", ldfSeats: "7 - 8", udfSeats: "10", others: "0 - 2", reasoning: "Current assessments indicate a slight edge for the UDF..." },
+            { name: "Maranallur", district: "Trivandrum", type: "Grama Panchayat", team: "Team 10", date: "4 December", seatCall: "Deadheat", bjpSeats: "8 - 9", ldfSeats: "8 - 9", udfSeats: "4 - 5", others: "0", reasoning: "The panchayat's voter profile comprises roughly 50% Nadars..." },
+            { name: "Vilappil", district: "Trivandrum", type: "Grama Panchayat", team: "Team 10", date: "2 December", seatCall: "Deadheat", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Several multi-corner fights..." },
+            { name: "Malayinkeezhu", district: "Trivandrum", type: "Grama Panchayat", team: "Team 10", date: "2 December", seatCall: "BJP Behind", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Malayinkeezhu has a large Nair majority..." },
+            { name: "Pallichal", district: "Trivandrum", type: "Grama Panchayat", team: "Team 10", date: "4 December", seatCall: "BJP Behind", bjpSeats: "2", ldfSeats: "10 - 12", udfSeats: "8", others: "0", reasoning: "BJP's decline from previous strength reflects dissatisfaction..." },
+            { name: "Vilavoorkal", district: "Trivandrum", type: "Grama Panchayat", team: "Team 10", date: "2 December", seatCall: "BJP Ahead", bjpSeats: "", ldfSeats: "", udfSeats: "", others: "", reasoning: "Vilavoorkal has strong structural conditions favouring BJP..." },
+            { name: "Kollayil", district: "Trivandrum", type: "Grama Panchayat", team: "Team 10", date: "3 December", seatCall: "BJP Behind", bjpSeats: "4-5", ldfSeats: "7-8", udfSeats: "5", others: "", reasoning: "Local dynamics present a challenge..." },
+            { name: "Perumkadavila", district: "Trivandrum", type: "Grama Panchayat", team: "Team 10", date: "3 December", seatCall: "Deadheat", bjpSeats: "6-7", ldfSeats: "6", udfSeats: "4", others: "", reasoning: "While there is significant optimism regarding Aruvippuram..." },
+            { name: "Aryankode", district: "Trivandrum", type: "Grama Panchayat", team: "Team 10", date: "3 December", seatCall: "BJP Behind", bjpSeats: "2-4", ldfSeats: "8-9", udfSeats: "4", others: "", reasoning: "Three wards are structurally weak..." },
+            { name: "Kallikkadu", district: "Trivandrum", type: "Grama Panchayat", team: "Team 10", date: "3 December", seatCall: "BJP Ahead", bjpSeats: "7-8", ldfSeats: "3", udfSeats: "3", others: "", reasoning: "A positive shift in voter sentiment is evident..." },
+            { name: "Ottasekaramangalam", district: "Trivandrum", type: "Grama Panchayat", team: "Team 10", date: "3 December", seatCall: "BJP Behind", bjpSeats: "3-4", ldfSeats: "", udfSeats: "", others: "", reasoning: "Structural hurdles in regaining lost ground..." }
+        ];
+
         // --- GLOBAL VARIABLES ---
         let filteredData = [...rawData];
+        let filteredPIData = [];
+        let comparisonData = [];
+        let activeTab = 'dheeraj';
         let districtChartInstance = null;
         let confidenceChartInstance = null;
+        let piDistrictChartInstance = null;
+        let piSeatCallChartInstance = null;
+
+        // --- TAB SWITCHING ---
+        function switchTab(tab) {
+            activeTab = tab;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(`content-${tab}`).classList.add('active');
+            
+            // Initialize tab-specific data
+            if (tab === 'pi-team' && filteredPIData.length === 0) {
+                filteredPIData = piTeamData.filter(item => item.seatCall); // Only show analyzed ones
+                populatePIDistricts();
+                updatePIStats();
+                renderPIGrid();
+                initPICharts();
+            } else if (tab === 'comparison' && comparisonData.length === 0) {
+                buildComparisonData();
+                populateComparisonDistricts();
+                updateComparisonStats();
+                renderComparisonGrid();
+                initComparisonCharts();
+            } else if (tab === 'comparison' && comparisonData.length > 0) {
+                // Re-render charts if data already exists
+                initComparisonCharts();
+            }
+            
+            lucide.createIcons();
+        }
+        
+        // --- PI TEAM FUNCTIONS ---
+        function populatePIDistricts() {
+            const districts = [...new Set(piTeamData.filter(i => i.seatCall).map(item => item.district))].sort();
+            const select = document.getElementById('piDistrictFilter');
+            select.innerHTML = '<option value="All">All Districts</option>';
+            districts.forEach(d => {
+                const option = document.createElement('option');
+                option.value = d;
+                option.textContent = d;
+                select.appendChild(option);
+            });
+        }
+        
+        function updatePIStats() {
+            const dataToShow = piTeamData.filter(i => i.seatCall);
+            document.getElementById('pi-total-count').innerText = dataToShow.length;
+            
+            const aheadCount = dataToShow.filter(i => i.seatCall === 'BJP Ahead').length;
+            const deadheatCount = dataToShow.filter(i => i.seatCall === 'Deadheat').length;
+            const behindCount = dataToShow.filter(i => i.seatCall === 'BJP Behind').length;
+            
+            document.getElementById('pi-ahead-count').innerText = aheadCount;
+            document.getElementById('pi-deadheat-count').innerText = deadheatCount;
+            document.getElementById('pi-behind-count').innerText = behindCount;
+        }
+        
+        function renderPIGrid() {
+            const container = document.getElementById('piGridContainer');
+            container.innerHTML = '';
+            
+            filteredPIData.forEach(item => {
+                if (!item.seatCall) return;
+                
+                let borderColor = 'border-gray-700';
+                let glowClass = '';
+                let titleColor = 'text-white';
+                let statusClass = '';
+                let statusText = item.seatCall;
+                
+                if (item.seatCall === 'BJP Ahead') {
+                    borderColor = 'border-cyber-high';
+                    glowClass = 'shadow-[0_0_15px_rgba(57,255,20,0.15)]';
+                    titleColor = 'text-white neon-text-green';
+                    statusClass = 'text-cyber-high font-bold';
+                } else if (item.seatCall === 'BJP Behind') {
+                    borderColor = 'border-cyber-tight';
+                    glowClass = 'shadow-[0_0_15px_rgba(255,119,0,0.15)]';
+                    titleColor = 'text-white neon-text-orange';
+                    statusClass = 'text-cyber-tight font-bold';
+                } else {
+                    borderColor = 'border-cyber-medium';
+                    glowClass = 'shadow-[0_0_15px_rgba(252,238,10,0.15)]';
+                    titleColor = 'text-white neon-text-yellow';
+                    statusClass = 'text-cyber-medium font-bold';
+                }
+                
+                const card = document.createElement('div');
+                card.className = `glass-panel rounded-lg p-5 border ${borderColor} ${glowClass} hover:scale-[1.02] transition-transform duration-300`;
+                
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <span class="text-xs text-cyber-primary font-bold tracking-widest uppercase mb-1 block">${item.district}</span>
+                            <h3 class="text-xl font-headers ${titleColor}">${item.name}</h3>
+                            <span class="text-xs text-gray-500 uppercase">${item.type}</span>
+                        </div>
+                        <div class="bg-gray-800/50 p-2 rounded text-center min-w-[60px] border border-gray-700">
+                            <div class="text-[10px] text-gray-400">TEAM</div>
+                            <div class="text-sm font-bold text-white">${item.team}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3 mb-4">
+                        <div class="flex items-center gap-2 text-sm text-gray-300">
+                            <i data-lucide="target" class="w-4 h-4 text-cyber-primary"></i>
+                            <span>Seat Call: <span class="${statusClass}">${statusText}</span></span>
+                        </div>
+                        ${item.bjpSeats ? `
+                        <div class="grid grid-cols-3 gap-2 text-xs">
+                            <div class="bg-cyber-high/10 p-2 rounded border border-cyber-high/30">
+                                <div class="text-cyber-high font-bold mb-1">BJP</div>
+                                <div class="text-white font-bold">${item.bjpSeats}</div>
+                            </div>
+                            <div class="bg-red-500/10 p-2 rounded border border-red-500/30">
+                                <div class="text-red-400 font-bold mb-1">LDF</div>
+                                <div class="text-white font-bold">${item.ldfSeats || '-'}</div>
+                            </div>
+                            <div class="bg-blue-500/10 p-2 rounded border border-blue-500/30">
+                                <div class="text-blue-400 font-bold mb-1">UDF</div>
+                                <div class="text-white font-bold">${item.udfSeats || '-'}</div>
+                            </div>
+                        </div>` : ''}
+                        <div class="flex items-center gap-2 text-sm text-gray-300">
+                            <i data-lucide="calendar" class="w-4 h-4 text-cyber-primary"></i>
+                            <span>Analyzed: ${item.date}</span>
+                        </div>
+                    </div>
+                    
+                    ${item.reasoning ? `
+                    <div class="border-t border-gray-700 pt-3">
+                        <p class="text-sm text-gray-400 italic leading-relaxed line-clamp-3">"${item.reasoning.substring(0, 200)}${item.reasoning.length > 200 ? '...' : ''}"</p>
+                    </div>` : ''}
+                `;
+                container.appendChild(card);
+            });
+            
+            lucide.createIcons();
+        }
+        
+        function initPICharts() {
+            const ctx1 = document.getElementById('piDistrictChart').getContext('2d');
+            const ctx2 = document.getElementById('piSeatCallChart').getContext('2d');
+            
+            piDistrictChartInstance = new Chart(ctx1, {
+                type: 'bar',
+                data: getPIDistrictData(),
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10, usePointStyle: true } }
+                    },
+                    scales: {
+                        y: { stacked: true, beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        x: { stacked: true, grid: { display: false } }
+                    }
+                }
+            });
+            
+            piSeatCallChartInstance = new Chart(ctx2, {
+                type: 'doughnut',
+                data: getPISeatCallData(),
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 10, usePointStyle: true } }
+                    }
+                }
+            });
+        }
+        
+        function getPIDistrictData() {
+            const agg = {};
+            filteredPIData.forEach(item => {
+                if (!item.seatCall) return;
+                if (!agg[item.district]) agg[item.district] = { Ahead: 0, Deadheat: 0, Behind: 0 };
+                if (item.seatCall === 'BJP Ahead') agg[item.district].Ahead++;
+                else if (item.seatCall === 'Deadheat') agg[item.district].Deadheat++;
+                else if (item.seatCall === 'BJP Behind') agg[item.district].Behind++;
+            });
+            
+            const sortedLabels = Object.keys(agg).sort((a,b) => {
+                const totalA = agg[a].Ahead + agg[a].Deadheat + agg[a].Behind;
+                const totalB = agg[b].Ahead + agg[b].Deadheat + agg[b].Behind;
+                return totalB - totalA;
+            }).slice(0, 10);
+            
+            return {
+                labels: sortedLabels,
+                datasets: [
+                    { label: 'Ahead', data: sortedLabels.map(l => agg[l].Ahead), backgroundColor: '#39ff14', barPercentage: 0.6 },
+                    { label: 'Deadheat', data: sortedLabels.map(l => agg[l].Deadheat), backgroundColor: '#fcee0a', barPercentage: 0.6 },
+                    { label: 'Behind', data: sortedLabels.map(l => agg[l].Behind), backgroundColor: '#ff7700', barPercentage: 0.6 }
+                ]
+            };
+        }
+        
+        function getPISeatCallData() {
+            const ahead = filteredPIData.filter(i => i.seatCall === 'BJP Ahead').length;
+            const deadheat = filteredPIData.filter(i => i.seatCall === 'Deadheat').length;
+            const behind = filteredPIData.filter(i => i.seatCall === 'BJP Behind').length;
+            
+            return {
+                labels: ['BJP Ahead', 'Deadheat', 'BJP Behind'],
+                datasets: [{
+                    data: [ahead, deadheat, behind],
+                    backgroundColor: ['#39ff14', '#fcee0a', '#ff7700'],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            };
+        }
+        
+        // --- COMPARISON CHART FUNCTIONS ---
+        let sourceCoverageChartInstance, confidenceComparisonChartInstance, districtCoverageChartInstance;
+        
+        function initComparisonCharts() {
+            // Destroy existing charts if they exist
+            if (sourceCoverageChartInstance) sourceCoverageChartInstance.destroy();
+            if (confidenceComparisonChartInstance) confidenceComparisonChartInstance.destroy();
+            if (districtCoverageChartInstance) districtCoverageChartInstance.destroy();
+            
+            const ctx1 = document.getElementById('sourceCoverageChart').getContext('2d');
+            const ctx2 = document.getElementById('confidenceComparisonChart').getContext('2d');
+            const ctx3 = document.getElementById('districtCoverageChart').getContext('2d');
+            
+            // Source Coverage Chart
+            sourceCoverageChartInstance = new Chart(ctx1, {
+                type: 'doughnut',
+                data: getSourceCoverageData(),
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, usePointStyle: true, color: '#e0e0e0' } }
+                    }
+                }
+            });
+            
+            // Confidence Comparison Chart
+            confidenceComparisonChartInstance = new Chart(ctx2, {
+                type: 'bar',
+                data: getConfidenceComparisonData(),
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, usePointStyle: true, color: '#e0e0e0' } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8585a3' } },
+                        x: { grid: { display: false }, ticks: { color: '#8585a3' } }
+                    }
+                }
+            });
+            
+            // District Coverage Comparison Chart
+            districtCoverageChartInstance = new Chart(ctx3, {
+                type: 'bar',
+                data: getDistrictCoverageData(),
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, usePointStyle: true, color: '#e0e0e0' } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8585a3' } },
+                        x: { grid: { display: false }, ticks: { color: '#8585a3', maxRotation: 45, minRotation: 45 } }
+                    }
+                }
+            });
+        }
+        
+        function getSourceCoverageData() {
+            const bothCount = comparisonData.filter(d => d.dheeraj && d.piTeam).length;
+            const dheerajOnly = comparisonData.filter(d => d.dheeraj && !d.piTeam).length;
+            const piOnly = comparisonData.filter(d => !d.dheeraj && d.piTeam).length;
+            
+            return {
+                labels: ['Both Sources', 'Dheeraj Only', 'PI Team Only'],
+                datasets: [{
+                    data: [bothCount, dheerajOnly, piOnly],
+                    backgroundColor: ['#39ff14', '#fcee0a', '#ff7700'],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            };
+        }
+        
+        function getConfidenceComparisonData() {
+            // Dheeraj confidence levels
+            const dheerajHigh = rawData.filter(i => i.prob === 'High').length;
+            const dheerajMed = rawData.filter(i => i.prob === 'Medium').length;
+            const dheerajTight = rawData.filter(i => i.prob === 'Tight').length;
+            
+            // PI Team seat calls
+            const piAhead = piTeamData.filter(i => i.seatCall === 'BJP Ahead').length;
+            const piDeadheat = piTeamData.filter(i => i.seatCall === 'Deadheat').length;
+            const piBehind = piTeamData.filter(i => i.seatCall === 'BJP Behind').length;
+            
+            return {
+                labels: ['High/Ahead', 'Medium/Deadheat', 'Tight/Behind'],
+                datasets: [
+                    {
+                        label: 'Dheeraj Analysis',
+                        data: [dheerajHigh, dheerajMed, dheerajTight],
+                        backgroundColor: '#00f0ff',
+                        barPercentage: 0.7
+                    },
+                    {
+                        label: 'PI Team Analysis',
+                        data: [piAhead, piDeadheat, piBehind],
+                        backgroundColor: '#39ff14',
+                        barPercentage: 0.7
+                    }
+                ]
+            };
+        }
+        
+        function getDistrictCoverageData() {
+            // Get all districts from both sources
+            const allDistricts = new Set();
+            rawData.forEach(d => allDistricts.add(d.district));
+            piTeamData.forEach(d => allDistricts.add(d.district));
+            
+            const districts = Array.from(allDistricts).sort();
+            
+            const dheerajCounts = districts.map(dist => rawData.filter(d => d.district === dist).length);
+            const piCounts = districts.map(dist => piTeamData.filter(d => d.district === dist).length);
+            
+            // Only show top 10 districts by total coverage
+            const districtTotals = districts.map((dist, idx) => ({
+                name: dist,
+                dheerajCount: dheerajCounts[idx],
+                piCount: piCounts[idx],
+                total: dheerajCounts[idx] + piCounts[idx]
+            })).sort((a, b) => b.total - a.total).slice(0, 10);
+            
+            return {
+                labels: districtTotals.map(d => d.name),
+                datasets: [
+                    {
+                        label: 'Dheeraj Analysis',
+                        data: districtTotals.map(d => d.dheerajCount),
+                        backgroundColor: '#00f0ff',
+                        barPercentage: 0.7
+                    },
+                    {
+                        label: 'PI Team Analysis',
+                        data: districtTotals.map(d => d.piCount),
+                        backgroundColor: '#39ff14',
+                        barPercentage: 0.7
+                    }
+                ]
+            };
+        }
+        
+        // --- COMPARISON FUNCTIONS ---
+        function buildComparisonData() {
+            comparisonData = [];
+            const processedNames = new Set();
+            
+            // Add all Dheeraj data with matching PI Team data
+            rawData.forEach(dheerajItem => {
+                const piMatch = findBestMatch(dheerajItem.name, piTeamData);
+                comparisonData.push({
+                    name: dheerajItem.name,
+                    district: dheerajItem.district,
+                    type: dheerajItem.type,
+                    dheeraj: dheerajItem,
+                    piTeam: piMatch,
+                    hasBoth: !!piMatch && !!piMatch.seatCall,
+                    source: piMatch && piMatch.seatCall ? 'both' : 'dheeraj'
+                });
+                processedNames.add(dheerajItem.name.toLowerCase());
+                if (piMatch) processedNames.add(piMatch.name.toLowerCase());
+            });
+            
+            // Add PI Team data that wasn't matched
+            piTeamData.forEach(piItem => {
+                if (!piItem.seatCall) return;
+                if (!processedNames.has(piItem.name.toLowerCase())) {
+                    comparisonData.push({
+                        name: piItem.name,
+                        district: piItem.district,
+                        type: piItem.type,
+                        dheeraj: null,
+                        piTeam: piItem,
+                        hasBoth: false,
+                        source: 'pi'
+                    });
+                }
+            });
+        }
+        
+        function populateComparisonDistricts() {
+            const districts = [...new Set(comparisonData.map(item => item.district))].sort();
+            const select = document.getElementById('compDistrictFilter');
+            select.innerHTML = '<option value="All">All Districts</option>';
+            districts.forEach(d => {
+                const option = document.createElement('option');
+                option.value = d;
+                option.textContent = d;
+                select.appendChild(option);
+            });
+        }
+        
+        function updateComparisonStats() {
+            document.getElementById('comp-total').innerText = comparisonData.length;
+            document.getElementById('comp-both').innerText = comparisonData.filter(i => i.hasBoth).length;
+            document.getElementById('comp-dheeraj-only').innerText = comparisonData.filter(i => i.source === 'dheeraj').length;
+            document.getElementById('comp-pi-only').innerText = comparisonData.filter(i => i.source === 'pi').length;
+        }
+        
+        function renderComparisonGrid() {
+            const container = document.getElementById('compGridContainer');
+            container.innerHTML = '';
+            
+            comparisonData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'glass-panel rounded-lg p-6 border-l-4 border-cyber-primary hover:scale-[1.01] transition-transform duration-300';
+                
+                let sourceBadge = '';
+                if (item.hasBoth) {
+                    sourceBadge = '<span class="px-2 py-1 bg-cyber-high/20 text-cyber-high text-xs rounded font-bold">BOTH SOURCES</span>';
+                } else if (item.source === 'dheeraj') {
+                    sourceBadge = '<span class="px-2 py-1 bg-cyber-medium/20 text-cyber-medium text-xs rounded font-bold">DHEERAJ ONLY</span>';
+                } else {
+                    sourceBadge = '<span class="px-2 py-1 bg-cyber-tight/20 text-cyber-tight text-xs rounded font-bold">PI TEAM ONLY</span>';
+                }
+                
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-2xl font-headers text-white neon-text mb-1">${item.name}</h3>
+                            <div class="flex gap-2 items-center">
+                                <span class="text-sm text-cyber-primary">${item.district} • ${item.type}</span>
+                                ${sourceBadge}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid ${item.hasBoth ? 'md:grid-cols-2' : 'grid-cols-1'} gap-6">
+                        ${item.dheeraj ? `
+                        <div class="bg-cyber-dark/50 p-4 rounded border border-cyber-primary/30">
+                            <h4 class="font-headers text-sm text-cyber-primary mb-3 tracking-widest">DHEERAJ ANALYSIS</h4>
+                            <div class="space-y-2 text-sm">
+                                <div><span class="text-gray-400">Probability:</span> <span class="font-bold ${
+                                    item.dheeraj.prob === 'High' ? 'text-cyber-high' : 
+                                    item.dheeraj.prob === 'Tight' ? 'text-cyber-tight' : 'text-cyber-medium'
+                                }">${item.dheeraj.prob}</span></div>
+                                <div><span class="text-gray-400">Demographics:</span> <span class="text-white">${item.dheeraj.h_dem}</span></div>
+                                <div><span class="text-gray-400">LS Lead:</span> <span class="text-white">${item.dheeraj.ls_lead}</span></div>
+                                <div class="pt-2 border-t border-gray-700">
+                                    <p class="text-gray-300 italic text-xs leading-relaxed">"${item.dheeraj.note.substring(0, 150)}..."</p>
+                                </div>
+                            </div>
+                        </div>
+                        ` : '<div class="bg-gray-900/50 p-4 rounded border border-gray-700/30 flex items-center justify-center text-gray-500"><p>No Dheeraj Analysis Available</p></div>'}
+                        
+                        ${item.piTeam && item.piTeam.seatCall ? `
+                        <div class="bg-cyber-dark/50 p-4 rounded border border-cyber-high/30">
+                            <h4 class="font-headers text-sm text-cyber-high mb-3 tracking-widest">PI TEAM ANALYSIS</h4>
+                            <div class="space-y-2 text-sm">
+                                <div><span class="text-gray-400">Seat Call:</span> <span class="font-bold ${
+                                    item.piTeam.seatCall === 'BJP Ahead' ? 'text-cyber-high' : 
+                                    item.piTeam.seatCall === 'BJP Behind' ? 'text-cyber-tight' : 'text-cyber-medium'
+                                }">${item.piTeam.seatCall}</span></div>
+                                ${item.piTeam.bjpSeats ? `<div><span class="text-gray-400">BJP Seats:</span> <span class="text-white">${item.piTeam.bjpSeats}</span></div>` : ''}
+                                ${item.piTeam.ldfSeats ? `<div><span class="text-gray-400">LDF Seats:</span> <span class="text-white">${item.piTeam.ldfSeats}</span></div>` : ''}
+                                ${item.piTeam.udfSeats ? `<div><span class="text-gray-400">UDF Seats:</span> <span class="text-white">${item.piTeam.udfSeats}</span></div>` : ''}
+                                <div><span class="text-gray-400">Team:</span> <span class="text-white">${item.piTeam.team}</span></div>
+                                ${item.piTeam.reasoning ? `
+                                <div class="pt-2 border-t border-gray-700">
+                                    <p class="text-gray-300 italic text-xs leading-relaxed">"${item.piTeam.reasoning.substring(0, 150)}..."</p>
+                                </div>` : ''}
+                            </div>
+                        </div>
+                        ` : (item.hasBoth ? '<div class="bg-gray-900/50 p-4 rounded border border-gray-700/30 flex items-center justify-center text-gray-500"><p>No PI Team Analysis Available</p></div>' : '')}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            
+            lucide.createIcons();
+        }
+        
+        // --- PI TEAM FILTERS ---
+        function handlePISearch() {
+            const searchTerm = document.getElementById('piSearchInput').value.toLowerCase();
+            const distFilter = document.getElementById('piDistrictFilter').value;
+            const seatCallFilter = document.getElementById('piSeatCallFilter').value;
+            
+            filteredPIData = piTeamData.filter(item => {
+                if (!item.seatCall) return false;
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm);
+                const matchesDist = distFilter === 'All' || item.district === distFilter;
+                const matchesSeatCall = seatCallFilter === 'All' || item.seatCall === seatCallFilter;
+                return matchesSearch && matchesDist && matchesSeatCall;
+            });
+            
+            updatePIStats();
+            renderPIGrid();
+            if (piDistrictChartInstance) {
+                piDistrictChartInstance.data = getPIDistrictData();
+                piDistrictChartInstance.update();
+            }
+            if (piSeatCallChartInstance) {
+                piSeatCallChartInstance.data.datasets[0].data = getPISeatCallData().datasets[0].data;
+                piSeatCallChartInstance.update();
+            }
+        }
+        
+        // --- COMPARISON FILTERS ---
+        function handleCompSearch() {
+            const searchTerm = document.getElementById('compSearchInput').value.toLowerCase();
+            const distFilter = document.getElementById('compDistrictFilter').value;
+            const viewFilter = document.getElementById('compViewFilter').value;
+            
+            let filtered = comparisonData.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm);
+                const matchesDist = distFilter === 'All' || item.district === distFilter;
+                return matchesSearch && matchesDist;
+            });
+            
+            if (viewFilter === 'Both') {
+                filtered = filtered.filter(i => i.hasBoth);
+            } else if (viewFilter === 'DheerajOnly') {
+                filtered = filtered.filter(i => i.source === 'dheeraj');
+            } else if (viewFilter === 'PIOnly') {
+                filtered = filtered.filter(i => i.source === 'pi');
+            }
+            
+            // Temporarily update comparisonData for rendering
+            const original = comparisonData;
+            comparisonData = filtered;
+            renderComparisonGrid();
+            comparisonData = original;
+        }
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -359,10 +1439,20 @@
             renderGrid();
             initCharts();
             
-            // Event Listeners
+            // Event Listeners - Dheeraj Tab
             document.getElementById('searchInput').addEventListener('input', handleSearch);
             document.getElementById('districtFilter').addEventListener('change', handleFilter);
             document.getElementById('probFilter').addEventListener('change', handleFilter);
+            
+            // Event Listeners - PI Team Tab
+            document.getElementById('piSearchInput').addEventListener('input', handlePISearch);
+            document.getElementById('piDistrictFilter').addEventListener('change', handlePISearch);
+            document.getElementById('piSeatCallFilter').addEventListener('change', handlePISearch);
+            
+            // Event Listeners - Comparison Tab
+            document.getElementById('compSearchInput').addEventListener('input', handleCompSearch);
+            document.getElementById('compDistrictFilter').addEventListener('change', handleCompSearch);
+            document.getElementById('compViewFilter').addEventListener('change', handleCompSearch);
         });
 
         // --- LOGIC FUNCTIONS ---
