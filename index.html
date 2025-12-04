@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kerala LB 2025 | Prediction Engine</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            black: '#0a0a0f',
+                            dark: '#13131f',
+                            panel: 'rgba(23, 25, 40, 0.75)',
+                            primary: '#00f0ff', // Cyan Blue (Base)
+                            high: '#39ff14',    // Neon Green
+                            medium: '#fcee0a',  // Yellow
+                            tight: '#ff7700',   // Orange
+                            text: '#e0e0e0',
+                            dim: '#8585a3'
+                        }
+                    },
+                    fontFamily: {
+                        headers: ['Orbitron', 'sans-serif'],
+                        body: ['Rajdhani', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050508;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: #e0e0e0;
+        }
+
+        .glass-panel {
+            background: rgba(19, 19, 31, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0f; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00f0ff; }
+
+        .neon-text { text-shadow: 0 0 5px rgba(0, 240, 255, 0.5); }
+        .neon-text-green { text-shadow: 0 0 8px rgba(57, 255, 20, 0.6); }
+        .neon-text-yellow { text-shadow: 0 0 5px rgba(252, 238, 10, 0.5); }
+        .neon-text-orange { text-shadow: 0 0 5px rgba(255, 119, 0, 0.5); }
+    </style>
+</head>
+<body class="font-body min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="glass-panel sticky top-0 z-50 border-b border-cyber-primary/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="cpu" class="text-cyber-primary w-8 h-8"></i>
+                    <div>
+                        <h1 class="font-headers font-bold text-2xl tracking-widest text-white neon-text">KERALA<span class="text-cyber-primary">2025</span></h1>
+                        <div class="text-xs text-cyber-primary tracking-widest uppercase opacity-80">Local Body BJP Performance Prediction Engine</div>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <div class="px-3 py-1 border border-cyber-high/50 rounded bg-cyber-high/10 text-cyber-high text-xs font-bold tracking-wider animate-pulse-slow">
+                        LIVE THREAD ANALYSIS
+                    </div>
+                    <div class="text-right">
+                        <div class="text-xs text-gray-400">STATUS</div>
+                        <div class="text-sm font-bold text-cyber-high">ONLINE</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
+
+        <!-- Analytics Dashboard -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Stats Card -->
+            <div class="glass-panel border-t-2 border-t-cyber-primary p-6 rounded-lg relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <i data-lucide="bar-chart-2" class="w-24 h-24 text-cyber-primary"></i>
+                </div>
+                <h2 class="font-headers text-sm text-cyber-primary uppercase tracking-widest mb-1">Total Analysed</h2>
+                <div class="text-5xl font-bold text-white neon-text mb-2" id="total-count">0</div>
+                <div class="text-xs text-gray-400 mb-4">Local Bodies in Dataset</div>
+
+                <div class="grid grid-cols-3 gap-2 border-t border-gray-700/50 pt-4">
+                    <div class="text-center">
+                        <div class="text-[10px] text-cyber-high uppercase tracking-wider font-bold mb-1">High</div>
+                        <div class="text-xl font-bold text-white" id="safe-count">0</div>
+                    </div>
+                    <div class="text-center border-l border-gray-700/50">
+                        <div class="text-[10px] text-cyber-medium uppercase tracking-wider font-bold mb-1">Medium</div>
+                        <div class="text-xl font-bold text-white" id="medium-count">0</div>
+                    </div>
+                    <div class="text-center border-l border-gray-700/50">
+                        <div class="text-[10px] text-cyber-tight uppercase tracking-wider font-bold mb-1">Tight</div>
+                        <div class="text-xl font-bold text-white" id="tight-count">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart 1: District Segmentation -->
+            <div class="glass-panel p-4 rounded-lg flex flex-col border-t-2 border-t-cyber-primary">
+                <h3 class="font-headers text-xs text-cyber-primary tracking-widest uppercase mb-4 text-center">District Segmentation</h3>
+                <div class="relative flex-grow h-48">
+                    <canvas id="districtChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 2: Confidence Breakdown -->
+            <div class="glass-panel p-4 rounded-lg flex flex-col border-t-2 border-t-cyber-primary">
+                <h3 class="font-headers text-xs text-cyber-primary tracking-widest uppercase mb-4 text-center">Confidence Matrix</h3>
+                <div class="relative flex-grow h-48 flex justify-center">
+                    <canvas id="confidenceChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Controls -->
+        <section class="glass-panel p-6 rounded-lg border-l-4 border-cyber-primary">
+            <div class="flex flex-col md:flex-row gap-4 items-end md:items-center justify-between">
+                
+                <!-- Search -->
+                <div class="w-full md:w-1/3 relative">
+                    <label class="block text-xs font-headers text-cyber-primary mb-1 tracking-widest">SEARCH DATABASE</label>
+                    <div class="relative">
+                        <i data-lucide="search" class="absolute left-3 top-3 w-5 h-5 text-cyber-primary"></i>
+                        <input type="text" id="searchInput" placeholder="Find Panchayat, Municipality..." 
+                            class="w-full bg-cyber-black border border-cyber-primary/30 text-white pl-10 pr-4 py-2 rounded focus:outline-none focus:border-cyber-primary focus:shadow-[0_0_10px_rgba(0,240,255,0.3)] transition-all font-body text-lg placeholder-gray-600">
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                    <div class="w-full sm:w-48">
+                        <label class="block text-xs font-headers text-cyber-primary mb-1 tracking-widest">DISTRICT FILTER</label>
+                        <select id="districtFilter" class="w-full bg-cyber-black border border-cyber-primary/30 text-white px-4 py-2 rounded focus:outline-none focus:border-cyber-primary appearance-none cursor-pointer hover:bg-cyber-dark transition-colors">
+                            <option value="All">All Districts</option>
+                            <!-- Options populated via JS -->
+                        </select>
+                    </div>
+
+                    <div class="w-full sm:w-48">
+                        <label class="block text-xs font-headers text-cyber-primary mb-1 tracking-widest">PROBABILITY</label>
+                        <select id="probFilter" class="w-full bg-cyber-black border border-cyber-primary/30 text-white px-4 py-2 rounded focus:outline-none focus:border-cyber-primary appearance-none cursor-pointer hover:bg-cyber-dark transition-colors">
+                            <option value="All">All Probabilities</option>
+                            <option value="High" class="text-cyber-high">High Probability</option>
+                            <option value="Medium" class="text-cyber-medium">Medium Probability</option>
+                            <option value="Tight" class="text-cyber-tight">Tight Fight</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Grid -->
+        <section id="gridContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pb-12">
+            <!-- Cards will be injected here -->
+        </section>
+
+    </main>
+
+    <footer class="border-t border-gray-800 bg-cyber-black py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-cyber-dim font-headers text-sm">DATA SOURCE: THREAD ID 1990759711000735989</p>
+            <p class="text-gray-600 text-xs mt-2 font-body">Analysis by @addheeraj | Visualization Generated via Gemini 2.0 By @oru_pavam_nair</p>
+        </div>
+    </footer>
+
+    <!-- LOGIC -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // --- DATASET ---
+        const rawData = [
+            { name: "Chemmaruthy", district: "Trivandrum", type: "Panchayat", prob: "High", h_dem: "85%+", ls_lead: "61%", note: "BJP led 61% of booths. Main opposition (6 seats). Grassroot growth." },
+            { name: "Kodungallur", district: "Thrissur", type: "Municipality", prob: "High", h_dem: "High", ls_lead: "High", note: "Lost by 1 seat in 2020. Highest vote share in state. Sympathy wave expected." },
+            { name: "Madhur", district: "Kasargod", type: "Panchayat", prob: "Medium", h_dem: "Favorable", ls_lead: "N/A", note: "Ruling since 1979. Communalized fight vs Muslim League. Demography still favorable." },
+            { name: "Vilappil", district: "Trivandrum", type: "Panchayat", prob: "Medium", h_dem: "High", ls_lead: "42%", note: "BJP main opposition (7 seats). Led 42% booths in LS. Triangular fight." },
+            { name: "Poruvazhy", district: "Kollam", type: "Panchayat", prob: "High", h_dem: "Majority", ls_lead: "N/A", note: "Expecting Hindu counter polarization vs SDPI support. Ms concentrated in few wards." },
+            { name: "Thazhakkara", district: "Alappuzha", type: "Panchayat", prob: "High", h_dem: "N/A", ls_lead: "N/A", note: "BJP likely to win outright. Good grassroots presence. Current LDF rule weak." },
+            { name: "Kuttoor", district: "Pathanamthitta", type: "Panchayat", prob: "Medium", h_dem: "N/A", ls_lead: "N/A", note: "Ruled in 2015, lost 2020. H consolidation + some C vote expected." },
+            { name: "Aymanam", district: "Kottayam", type: "Panchayat", prob: "Medium", h_dem: "Dominant", ls_lead: "N/A", note: "Main opposition. Delimitation created pro-BJP ward. Increasing Ezhava penetration." },
+            { name: "Parli", district: "Palakkad", type: "Panchayat", prob: "High", h_dem: "N/A", ls_lead: "59%", note: "Upcoming stronghold. Led 59% booths in LS. Almost sure win." },
+            { name: "Attingal", district: "Trivandrum", type: "Municipality", prob: "High", h_dem: "High (Urban)", ls_lead: "88%", note: "Natural BJP territory. Led 88% booths in LS. Likely to breach CPM fortress." },
+            { name: "Vallachira", district: "Thrissur", type: "Panchayat", prob: "High", h_dem: "Heavy", ls_lead: "88%", note: "Led 88% booths in LS. Expecting clear victory in LDF stronghold." },
+            { name: "Thiruvandoor", district: "Alappuzha", type: "Panchayat", prob: "High", h_dem: "Majority", ls_lead: "N/A", note: "Stronghold. Expecting decisive verdict favoring BJP." },
+            { name: "Thazhva", district: "Kollam", type: "Panchayat", prob: "Tight", h_dem: "Dominant", ls_lead: "50%", note: "Led 50% booths. Likely to edge ahead in tight 3-corner fight." },
+            { name: "Mudakkal", district: "Trivandrum", type: "Panchayat", prob: "High", h_dem: "88%", ls_lead: "69%", note: "Match made in heaven. Led 69% booths. Most sure pickup." },
+            { name: "Mutholy", district: "Kottayam", type: "Panchayat", prob: "Medium", h_dem: "Mixed H/C", ls_lead: "N/A", note: "Delimitation tricky, but expecting plurality on H consolidation." },
+            { name: "Tripunithura", district: "Ernakulam", type: "Municipality", prob: "Tight", h_dem: "80%", ls_lead: "N/A", note: "Won 2 byelections recently. Edge past LDF on anti-incumbency." },
+            { name: "Ranny Perunadu", district: "Pathanamthitta", type: "Panchayat", prob: "Medium", h_dem: "Dominant", ls_lead: "Good", note: "Seats increased 0->5 (2020). Can gain 2-3 more seats." },
+            { name: "Kollayil", district: "Trivandrum", type: "Panchayat", prob: "Medium", h_dem: "Majority", ls_lead: "50%", note: "Strong BJP area. Capture from LDF on anti-incumbency." },
+            { name: "Ambalappuzha South", district: "Alappuzha", type: "Panchayat", prob: "High", h_dem: "Dominant", ls_lead: "52%", note: "Easy pickup. #1 in LS with 37% vote." },
+            { name: "Enmakaje", district: "Kasargod", type: "Panchayat", prob: "High", h_dem: "Dominant", ls_lead: "Strong", note: "Regain stronghold via H consolidation vs 3-way split." },
+            { name: "Nedavathur", district: "Kollam", type: "Panchayat", prob: "High", h_dem: "Heavily H", ls_lead: "N/A", note: "Won plurality 2020. Sympathy + LDF/UDF instability favors BJP." },
+            { name: "Kaliyoor", district: "Trivandrum", type: "Panchayat", prob: "High", h_dem: "Stronghold", ls_lead: "77%", note: "Astounding 77% booth lead. Ousted by rebel/alliance in 2023, likely to win back." },
+            { name: "Vattavada", district: "Idukki", type: "Panchayat", prob: "Tight", h_dem: "Tribal H", ls_lead: "N/A", note: "Heavy grassroots work. 3-cornered race win likely." },
+            { name: "Chirakkadavu", district: "Kottayam", type: "Panchayat", prob: "Tight", h_dem: "Majority", ls_lead: "N/A", note: "Triangular contest benefits BJP. Anti-incumbency factor." },
+            { name: "Ottoor", district: "Trivandrum", type: "Panchayat", prob: "High", h_dem: "90%", ls_lead: "High", note: "Highest H% in district. Natural territory. Comfortable win." },
+            { name: "Budhanur", district: "Alappuzha", type: "Panchayat", prob: "Medium", h_dem: "Dominant", ls_lead: "N/A", note: "Breakthrough expected. Was 2nd in 6 wards in 2020." },
+            { name: "Edavilangu", district: "Thrissur", type: "Panchayat", prob: "High", h_dem: "Majority", ls_lead: "Strong", note: "#1 among Hs. Win on H consolidation." },
+            { name: "Cherukol", district: "Pathanamthitta", type: "Panchayat", prob: "Medium", h_dem: "Minority", ls_lead: "N/A", note: "Currently ruling. Narrow path to retain via H wards." },
+            { name: "Athiyanoor", district: "Trivandrum", type: "Panchayat", prob: "High", h_dem: "Dominant", ls_lead: "64%", note: "Led 64% booths. Final winning push expected." },
+            { name: "Perinad", district: "Kollam", type: "Panchayat", prob: "Tight", h_dem: "Majority", ls_lead: "N/A", note: "3-cornered fight. Can wrest 2-3 wards for plurality." },
+            { name: "Karthikapally", district: "Alappuzha", type: "Panchayat", prob: "High", h_dem: "86%", ls_lead: "86%", note: "Easy win. Trailing LDF by just 1 seat currently." },
+            { name: "Thiruvilwamala", district: "Thrissur", type: "Panchayat", prob: "High", h_dem: "Heavy", ls_lead: "Strong", note: "Tied at 6 in 2020. Clear victory expected." },
+            { name: "Maranallur", district: "Trivandrum", type: "Panchayat", prob: "High", h_dem: "Dominant", ls_lead: "59%", note: "Regain dominance in 3-cornered fight." },
+            { name: "Nedumpram", district: "Pathanamthitta", type: "Panchayat", prob: "High", h_dem: "Majority", ls_lead: "N/A", note: "Regain stronghold lost in 2020." },
+            { name: "Palakkad Municipality", district: "Palakkad", type: "Municipality", prob: "High", h_dem: "Dominant", ls_lead: "N/A", note: "Ruling since 2015. 3rd time win on H consolidation." },
+            { name: "Chirakkara", district: "Kollam", type: "Panchayat", prob: "Tight", h_dem: "90%", ls_lead: "31%", note: "Ripe for inroads. Win plurality in tight 3-way." },
+            { name: "Karavaram", district: "Trivandrum", type: "Panchayat", prob: "Medium", h_dem: "Dominant", ls_lead: "N/A", note: "Retain with plurality. Growth from 0 (2015) to 9 (2020)." },
+            { name: "Paivalike", district: "Kasargod", type: "Panchayat", prob: "Tight", h_dem: "Majority", ls_lead: "N/A", note: "Tactical M voting vs BJP. Narrow majority expected." },
+            { name: "Parappookara", district: "Thrissur", type: "Panchayat", prob: "High", h_dem: "75%+", ls_lead: "86%", note: "Staggering 46% vote share LS. Easy breach of CPM hold." },
+            { name: "Kallara", district: "Kottayam", type: "Panchayat", prob: "Tight", h_dem: "Majority", ls_lead: "N/A", note: "Triangular contest benefits BJP. Chance to win plurality." },
+            { name: "Pattazhi", district: "Kollam", type: "Panchayat", prob: "Tight", h_dem: "Majority", ls_lead: "N/A", note: "Can emerge #1 if maximises H performance." },
+            { name: "Chettikulangara", district: "Alappuzha", type: "Panchayat", prob: "Medium", h_dem: "87%", ls_lead: "57%", note: "LDF bastion. Win possible based on grassroots." },
+            { name: "Perumkadavila", district: "Trivandrum", type: "Panchayat", prob: "Medium", h_dem: "Majority", ls_lead: "38% leads", note: "#1 in LS (35% vote). Win plurality." },
+            { name: "Akkathethara", district: "Palakkad", type: "Panchayat", prob: "High", h_dem: "High", ls_lead: "71%", note: "Story of H Kerala. CPM stronghold crumbling. BJP pickup." },
+            { name: "Venmony", district: "Alappuzha", type: "Panchayat", prob: "Medium", h_dem: "Majority", ls_lead: "N/A", note: "Had 7 2nd places. Win likely based on trend." },
+            { name: "Kaviyoor", district: "Pathanamthitta", type: "Panchayat", prob: "Medium", h_dem: "Majority", ls_lead: "N/A", note: "Won plurality 2020. Narrow path but expect plurality." },
+            { name: "Meenja", district: "Kasargod", type: "Panchayat", prob: "Tight", h_dem: "Majority", ls_lead: "N/A", note: "Overcome 4 party M alliance (SDPI IUML INC CPM)." },
+            { name: "Anchal", district: "Kollam", type: "Panchayat", prob: "Medium", h_dem: "Majority", ls_lead: "Creditable", note: "Key growth area. Decent chance to upset LDF." },
+            { name: "Varkala", district: "Trivandrum", type: "Municipality", prob: "Medium", h_dem: "Ezhava Home", ls_lead: "71%", note: "Spiritual home of Ezhavas. Overcome tactical M voting." },
+            { name: "Cherpu", district: "Thrissur", type: "Panchayat", prob: "High", h_dem: "Majority", ls_lead: "79%", note: "LS sweep (44% vote). Should win in 3-way." },
+            { name: "Pallichal", district: "Trivandrum", type: "Panchayat", prob: "High", h_dem: "Heavily H", ls_lead: "60%", note: "Anti-incumbency to help topple LDF." },
+            { name: "Puliyur", district: "Alappuzha", type: "Panchayat", prob: "Medium", h_dem: "Majority", ls_lead: "N/A", note: "Regressed in 2020. Decent chance if anti-incumbency plays out." },
+            { name: "Puliyur (Analysis 2)", district: "Alappuzha", type: "Panchayat", prob: "Medium", h_dem: "Majority", ls_lead: "N/A", note: "Came close in 2015, regressed in 2020. Anti-incumbency opportunity." },
+            { name: "Kalluvathakal", district: "Kollam", type: "Panchayat", prob: "Medium", h_dem: "Heavily H", ls_lead: "Good", note: "Won plurality 2020. Win again despite local issues." },
+            { name: "Vaniyamkulam", district: "Palakkad", type: "Panchayat", prob: "Medium", h_dem: "High", ls_lead: "Good", note: "CPM fort. Decent chance of upset win." },
+            { name: "Kottukal", district: "Trivandrum", type: "Panchayat", prob: "Medium", h_dem: "Majority", ls_lead: "56%", note: "#1 in LS. Decent chance in triangular fight." },
+            { name: "Nattika", district: "Thrissur", type: "Panchayat", prob: "High", h_dem: "Dominant", ls_lead: "91%", note: "Momentum post SG Thrissur win. 91% booth lead." },
+            { name: "Edamalakudy", district: "Idukki", type: "Panchayat", prob: "High", h_dem: "Tribal", ls_lead: "N/A", note: "Emerging hotspot. Byelection success. Likely win." },
+            { name: "Pandalam Thekkekara", district: "Pathanamthitta", type: "Panchayat", prob: "High", h_dem: "Heavily H", ls_lead: "50%", note: "Sabarimala sentiment favors BJP." },
+            { name: "Kadakavoor", district: "Trivandrum", type: "Panchayat", prob: "High", h_dem: "85%+", ls_lead: "70%", note: "Strongest in Attingal LS. Demography leads to win." },
+            { name: "Haripad", district: "Alappuzha", type: "Municipality", prob: "High", h_dem: "Heavily H", ls_lead: "67%", note: "Should cross double digits. Plurality likely." },
+            { name: "Avinissery", district: "Thrissur", type: "Panchayat", prob: "High", h_dem: "Majority", ls_lead: "79%", note: "Biggest stronghold in Thrissur. Safe." },
+            { name: "Kidangoor", district: "Kottayam", type: "Panchayat", prob: "Tight", h_dem: "Majority", ls_lead: "N/A", note: "Win plurality. 8/16 wards winnable." },
+            { name: "Mylom", district: "Kollam", type: "Panchayat", prob: "Medium", h_dem: "Dominant", ls_lead: "N/A", note: "CPM bastion. Anti-incumbency could lead to #1." },
+            { name: "Ottasekharamangalam", district: "Trivandrum", type: "Panchayat", prob: "Medium", h_dem: "64%", ls_lead: "34% vote", note: "#1 among Hs. Consolidate CPM leaning H vote." },
+            { name: "Badiadka", district: "Kasargod", type: "Panchayat", prob: "Tight", h_dem: "Majority", ls_lead: "N/A", note: "Narrow path exists. Wrest H seats from INC/CPM." },
+            { name: "Chennithala-Tripperumuthara", district: "Alappuzha", type: "Panchayat", prob: "High", h_dem: "Dominant", ls_lead: "N/A", note: "Expect clear win. Riddled with instability." },
+            { name: "Sree Narayanapuram", district: "Thrissur", type: "Panchayat", prob: "Tight", h_dem: "Majority", ls_lead: "N/A", note: "Tactical M voting. Close battle. Chance if H increases." },
+            { name: "Malayinkeezhu", district: "Trivandrum", type: "Panchayat", prob: "High", h_dem: "Heavily H", ls_lead: "70%", note: "Breakthrough expected. 40% vote in LS." },
+            { name: "Thycattusery", district: "Alappuzha", type: "Panchayat", prob: "Medium", h_dem: "75%", ls_lead: "N/A", note: "Main opposition. Decent chance to become #1." },
+            { name: "Pandalam", district: "Pathanamthitta", type: "Municipality", prob: "High", h_dem: "Dominant", ls_lead: "N/A", note: "Retain with plurality. Anti-LDF environment." },
+            { name: "Pavithreshwaram", district: "Kollam", type: "Panchayat", prob: "Tight", h_dem: "81%", ls_lead: "N/A", note: "Chance to emerge #1 in 3 cornered fight." },
+            { name: "Balaramapuram", district: "Trivandrum", type: "Panchayat", prob: "High", h_dem: "Dominant", ls_lead: "65%", note: "Easy win given grassroot trends." },
+            { name: "Engandiyoor", district: "Thrissur", type: "Panchayat", prob: "High", h_dem: "Dominant", ls_lead: "78%", note: "LS 'on steroids'. Good chance to win." },
+            { name: "Ottapalam", district: "Palakkad", type: "Municipality", prob: "Tight", h_dem: "67%", ls_lead: "50%", note: "Upset plurality win possible via H consolidation." },
+            { name: "Muthukulam", district: "Alappuzha", type: "Panchayat", prob: "High", h_dem: "90%+", ls_lead: "76%", note: "Victory likely. Led 76% booths in LS." },
+            { name: "Aryankode", district: "Trivandrum", type: "Panchayat", prob: "Tight", h_dem: "Majority", ls_lead: "35% leads", note: "Chance to win plurality depending on C vote split." },
+            { name: "Belur", district: "Kasargod", type: "Panchayat", prob: "High", h_dem: "Very High", ls_lead: "N/A", note: "Safest local body in Kerala. Sure win." },
+            { name: "Velavoor", district: "Kottayam", type: "Panchayat", prob: "Tight", h_dem: "Majority", ls_lead: "30% vote", note: "Decent chance of winning plurality in tight 3 way." },
+            { name: "Panayam", district: "Kollam", type: "Panchayat", prob: "Medium", h_dem: "Heavily H", ls_lead: "N/A", note: "Good chance given grassroot growth." },
+            { name: "Ala", district: "Alappuzha", type: "Panchayat", prob: "Tight", h_dem: "69%", ls_lead: "N/A", note: "Breakthrough potential. Close to victory in 2020." },
+            { name: "Pothencode", district: "Trivandrum", type: "Panchayat", prob: "High", h_dem: "Dominant", ls_lead: "34% vote", note: "Main opposition. Should be a win." },
+            { name: "Poomangalam", district: "Thrissur", type: "Panchayat", prob: "Medium", h_dem: "Majority", ls_lead: "75%", note: "Swept H areas in LS. Flip from LDF." },
+            { name: "Shornur", district: "Palakkad", type: "Municipality", prob: "Medium", h_dem: "Heavily H", ls_lead: "34% vote", note: "Red fort breach possible. Victory possible." },
+            { name: "Vakkom", district: "Trivandrum", type: "Panchayat", prob: "High", h_dem: "Heavily H", ls_lead: "69%", note: "Good chance due to demography and growth." },
+            { name: "Punnapra North", district: "Alappuzha", type: "Panchayat", prob: "Medium", h_dem: "Majority", ls_lead: "54%", note: "Crushed CPM in LS leads. Bastion might fall." },
+            { name: "Chathanoor", district: "Kollam", type: "Panchayat", prob: "Tight", h_dem: "Dominant", ls_lead: "N/A", note: "Chance to win in 3 cornered fight." },
+            { name: "Malampuzha", district: "Palakkad", type: "Panchayat", prob: "High", h_dem: "Dominated", ls_lead: "34% vote", note: "CPM fortress crumbling. Expecting victory." },
+            { name: "Manamboor", district: "Trivandrum", type: "Panchayat", prob: "High", h_dem: "Dominant", ls_lead: "58%", note: "Winning chance in 10-12 wards." },
+            { name: "Malayalapuzha", district: "Pathanamthitta", type: "Panchayat", prob: "Tight", h_dem: "Dominated", ls_lead: "35% leads", note: "Win if Sabarimala sentiment works against CPM." },
+            { name: "Elampalloor", district: "Kollam", type: "Panchayat", prob: "Medium", h_dem: "Majority", ls_lead: "N/A", note: "Decent chance to win plurality by sweeping H areas." },
+            { name: "Karalam", district: "Thrissur", type: "Panchayat", prob: "Medium", h_dem: "Dominant", ls_lead: "67%", note: "Decent chance to upset CPM here." },
+            { name: "Vilavoorkal", district: "Trivandrum", type: "Panchayat", prob: "High", h_dem: "Dominant", ls_lead: "63%", note: "Clear win expected after 2 tied #1s." },
+            { name: "Pathiyoor", district: "Alappuzha", type: "Panchayat", prob: "High", h_dem: "85%+", ls_lead: "70%", note: "Win very much possible. Main opposition." },
+            { name: "Kollengode", district: "Palakkad", type: "Panchayat", prob: "Medium", h_dem: "Heavily H", ls_lead: "Good", note: "CPM stronghold. Surprise upset potential." },
+            { name: "Kulanada", district: "Pathanamthitta", type: "Panchayat", prob: "High", h_dem: "Majority", ls_lead: "45%", note: "Expecting hatrick victory." },
+            { name: "Vamanapuram", district: "Trivandrum", type: "Panchayat", prob: "Tight", h_dem: "Heavily H", ls_lead: "35% vote", note: "Demography favors BJP in close 3 way fight." },
+            { name: "Kumbadaje", district: "Kasargod", type: "Panchayat", prob: "Tight", h_dem: "Majority", ls_lead: "N/A", note: "Narrow path to power. Flip Muniyoor ward." },
+            { name: "Mavelikkara Thamarakulam", district: "Alappuzha", type: "Panchayat", prob: "Tight", h_dem: "Dominant", ls_lead: "N/A", note: "Good chance to become #1 in triangular fight." },
+            { name: "Trivandrum Corporation", district: "Trivandrum", type: "Corporation", prob: "High", h_dem: "Heartbeat of H", ls_lead: "N/A", note: "Epitome of H shift. Clear majority 51+ projected." },
+            { name: "Padiyoor", district: "Thrissur", type: "Panchayat", prob: "Medium", h_dem: "Dominant", ls_lead: "67%", note: "Good chance to flip from LDF." },
+            { name: "Poonjar", district: "Kottayam", type: "Panchayat", prob: "Tight", h_dem: "Mixed", ls_lead: "50%", note: "Can win if PCG factor works and gets C vote." },
+            { name: "Elakamon", district: "Trivandrum", type: "Panchayat", prob: "Medium", h_dem: "Dominant", ls_lead: "32% vote", note: "Can win if consolidates anti-LDF H vote." },
+            { name: "Mavelikkara", district: "Alappuzha", type: "Municipality", prob: "High", h_dem: "Dominant", ls_lead: "N/A", note: "Tied to win shift. Good chance." },
+            { name: "Kulakkada", district: "Kollam", type: "Panchayat", prob: "Medium", h_dem: "Heavily H", ls_lead: "N/A", note: "Chance to win depending on anti-incumbency." },
+            { name: "Ayiroor", district: "Pathanamthitta", type: "Panchayat", prob: "Medium", h_dem: "Majority", ls_lead: "50%", note: "Good chance to flip from LDF." },
+            { name: "Cheriyunoor", district: "Trivandrum", type: "Panchayat", prob: "Medium", h_dem: "80%", ls_lead: "56%", note: "Can win if it puts good effort. Latent H base." },
+            { name: "Kunnamakulam", district: "Thrissur", type: "Municipality", prob: "Medium", h_dem: "Majority", ls_lead: "42% H vote", note: "Win plurality if H votes consolidate." },
+            { name: "Pallickathodu", district: "Kottayam", type: "Panchayat", prob: "High", h_dem: "Majority", ls_lead: "N/A", note: "Stronghold. Expecting clear victory." },
+            { name: "Cheruthana", district: "Alappuzha", type: "Panchayat", prob: "Tight", h_dem: "Dominant", ls_lead: "45%", note: "Win plurality in 3 cornered if LS momentum sustains." },
+            { name: "Manglapuram", district: "Trivandrum", type: "Panchayat", prob: "Medium", h_dem: "Dominant", ls_lead: "43%", note: "Decent chance to flip from LDF. 2 close losses in 2020." },
+            { name: "Kadaradka", district: "Kasargod", type: "Panchayat", prob: "High", h_dem: "Dominant", ls_lead: "N/A", note: "Win plurality or majority. Dominant force." },
+            { name: "Vadanapilly", district: "Thrissur", type: "Panchayat", prob: "Tight", h_dem: "Majority", ls_lead: "45%", note: "Chance if H shift offsets M consolidation." },
+            { name: "Kunnathur", district: "Kollam", type: "Panchayat", prob: "Tight", h_dem: "Heavily H", ls_lead: "N/A", note: "Good chance to win in triangular fight." },
+            { name: "Pandanad", district: "Alappuzha", type: "Panchayat", prob: "Medium", h_dem: "Majority", ls_lead: "N/A", note: "Win plurality again despite local issues." },
+            { name: "Kottanad", district: "Pathanamthitta", type: "Panchayat", prob: "Tight", h_dem: "Equal H/C", ls_lead: "29% vote", note: "Narrow chance to win plurality based on minority split." },
+            { name: "Venganoor", district: "Trivandrum", type: "Panchayat", prob: "High", h_dem: "Dominant", ls_lead: "62%", note: "Regain stronghold. Led 62% booths." },
+            { name: "Chowannur", district: "Thrissur", type: "Panchayat", prob: "Medium", h_dem: "Dominant", ls_lead: "25% vote", note: "Decent chance of flipping from LDF." },
+            { name: "Krishnapuram", district: "Alappuzha", type: "Panchayat", prob: "Tight", h_dem: "70%", ls_lead: "55%", note: "Decent chance of plurality in 3 way fight." },
+            { name: "Thidanadu", district: "Kottayam", type: "Panchayat", prob: "Tight", h_dem: "C Dominant", ls_lead: "38%", note: "Win plurality if PCG factor works." },
+            { name: "Elappuly", district: "Palakkad", type: "Panchayat", prob: "Tight", h_dem: "Heavily H", ls_lead: "#2", note: "Viable path to win plurality in 3 cornered fight." },
+            { name: "Mullurkara", district: "Thrissur", type: "Panchayat", prob: "Tight", h_dem: "Majority", ls_lead: "N/A", note: "Chance to win plurality depending on M vote." },
+            { name: "Kalikkadu", district: "Trivandrum", type: "Panchayat", prob: "High", h_dem: "Dominant", ls_lead: "64%", note: "Retain comfortably." },
+            { name: "Kareepra", district: "Kollam", type: "Panchayat", prob: "Medium", h_dem: "Heavily H", ls_lead: "N/A", note: "Flip if anti-incumbency plays out." },
+            { name: "Omalloor", district: "Pathanamthitta", type: "Panchayat", prob: "Tight", h_dem: "Majority", ls_lead: "#2", note: "Win plurality if H consolidation increases." },
+            { name: "Neelamperoor", district: "Alappuzha", type: "Panchayat", prob: "Medium", h_dem: "Dominant", ls_lead: "N/A", note: "Decent chance of flipping." },
+            { name: "Paralam", district: "Thrissur", type: "Panchayat", prob: "Medium", h_dem: "Majority", ls_lead: "68%", note: "Decent chance to win plurality." },
+            { name: "Pulimath", district: "Trivandrum", type: "Panchayat", prob: "Medium", h_dem: "Heavily H", ls_lead: "62%", note: "Upset potential if latent H base activates." },
+            { name: "Vorkady", district: "Kasargod", type: "Panchayat", prob: "Tight", h_dem: "Minority H", ls_lead: "N/A", note: "Slim chance depending on H consolidation and M split." },
+            { name: "Kodamthuruthu", district: "Alappuzha", type: "Panchayat", prob: "High", h_dem: "Dominant", ls_lead: "N/A", note: "Win in current environment. Oust recovery." },
+            { name: "Kottangal", district: "Pathanamthitta", type: "Panchayat", prob: "Tight", h_dem: "Minority H", ls_lead: "29% vote", note: "Narrow chance to win plurality based on split of minority votes." }
+        ];
+
+        // --- GLOBAL VARIABLES ---
+        let filteredData = [...rawData];
+        let districtChartInstance = null;
+        let confidenceChartInstance = null;
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            populateDistricts();
+            updateStats();
+            renderGrid();
+            initCharts();
+            
+            // Event Listeners
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+            document.getElementById('districtFilter').addEventListener('change', handleFilter);
+            document.getElementById('probFilter').addEventListener('change', handleFilter);
+        });
+
+        // --- LOGIC FUNCTIONS ---
+
+        function populateDistricts() {
+            const districts = [...new Set(rawData.map(item => item.district))].sort();
+            const select = document.getElementById('districtFilter');
+            districts.forEach(d => {
+                const option = document.createElement('option');
+                option.value = d;
+                option.textContent = d;
+                select.appendChild(option);
+            });
+        }
+
+        function handleSearch(e) {
+            filterData();
+        }
+
+        function handleFilter(e) {
+            filterData();
+        }
+
+        function filterData() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const distFilter = document.getElementById('districtFilter').value;
+            const probFilter = document.getElementById('probFilter').value;
+
+            filteredData = rawData.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm) || 
+                                      item.note.toLowerCase().includes(searchTerm);
+                const matchesDist = distFilter === 'All' || item.district === distFilter;
+                
+                let matchesProb = true;
+                if (probFilter === 'High') matchesProb = item.prob === 'High';
+                if (probFilter === 'Medium') matchesProb = item.prob === 'Medium';
+                if (probFilter === 'Tight') matchesProb = item.prob === 'Tight';
+
+                return matchesSearch && matchesDist && matchesProb;
+            });
+
+            updateStats();
+            renderGrid();
+            updateCharts();
+        }
+
+        function updateStats() {
+            // Count total
+            animateValue("total-count", parseInt(document.getElementById("total-count").innerText), filteredData.length, 500);
+
+            // Count High
+            const safeCount = filteredData.filter(i => i.prob === 'High').length;
+            document.getElementById('safe-count').innerText = safeCount;
+
+            // Count Medium
+            const medCount = filteredData.filter(i => i.prob === 'Medium').length;
+            document.getElementById('medium-count').innerText = medCount;
+
+            // Count Tight
+            const tightCount = filteredData.filter(i => i.prob === 'Tight').length;
+            document.getElementById('tight-count').innerText = tightCount;
+        }
+
+        function renderGrid() {
+            const container = document.getElementById('gridContainer');
+            container.innerHTML = '';
+
+            filteredData.forEach(item => {
+                // Determine Colors based on Probability
+                let borderColor = 'border-gray-700';
+                let glowClass = '';
+                let titleColor = 'text-white';
+                let predClass = '';
+                
+                if(item.prob === 'High') {
+                    borderColor = 'border-cyber-high';
+                    glowClass = 'shadow-[0_0_15px_rgba(57,255,20,0.15)]';
+                    titleColor = 'text-white neon-text-green';
+                    predClass = 'text-cyber-high font-bold';
+                } else if (item.prob === 'Tight') {
+                    borderColor = 'border-cyber-tight';
+                    glowClass = 'shadow-[0_0_15px_rgba(255,119,0,0.15)]';
+                    titleColor = 'text-white neon-text-orange';
+                    predClass = 'text-cyber-tight font-bold';
+                } else { // Medium
+                    borderColor = 'border-cyber-medium';
+                    glowClass = 'shadow-[0_0_15px_rgba(252,238,10,0.15)]';
+                    titleColor = 'text-white neon-text-yellow';
+                    predClass = 'text-cyber-medium font-bold';
+                }
+
+                const card = document.createElement('div');
+                card.className = `glass-panel rounded-lg p-5 border ${borderColor} ${glowClass} hover:scale-[1.02] transition-transform duration-300 group`;
+                
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <span class="text-xs text-cyber-primary font-bold tracking-widest uppercase mb-1 block">${item.district}</span>
+                            <h3 class="text-xl font-headers ${titleColor}">${item.name}</h3>
+                            <span class="text-xs text-gray-500 uppercase">${item.type}</span>
+                        </div>
+                        <div class="bg-gray-800/50 p-2 rounded text-center min-w-[60px] border border-gray-700">
+                            <div class="text-[10px] text-gray-400">LS LEAD</div>
+                            <div class="text-lg font-bold text-white">${item.ls_lead}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3 mb-4">
+                        <div class="flex items-center gap-2 text-sm text-gray-300">
+                            <i data-lucide="users" class="w-4 h-4 text-cyber-primary"></i>
+                            <span>Demography: <span class="text-white">${item.h_dem}</span></span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-gray-300">
+                            <i data-lucide="target" class="w-4 h-4 text-cyber-primary"></i>
+                            <span>Prediction: <span class="${predClass}">${item.prob === 'Tight' ? 'Tight Fight' : item.prob + ' Probability'}</span></span>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-gray-700 pt-3">
+                        <p class="text-sm text-gray-400 italic leading-relaxed">"${item.note}"</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            
+            // Re-render icons
+            lucide.createIcons();
+        }
+
+        // --- CHART JS LOGIC ---
+
+        function initCharts() {
+            Chart.defaults.color = '#8585a3';
+            Chart.defaults.borderColor = '#1f2937';
+            Chart.defaults.font.family = 'Rajdhani';
+
+            // 1. District Chart (Stacked Bar)
+            const ctx1 = document.getElementById('districtChart').getContext('2d');
+            districtChartInstance = new Chart(ctx1, {
+                type: 'bar',
+                data: getDistrictData(),
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10, usePointStyle: true } },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        y: { stacked: true, beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        x: { stacked: true, grid: { display: false } }
+                    },
+                    animation: { duration: 1000 }
+                }
+            });
+
+            // 2. Confidence Chart (Doughnut)
+            const ctx2 = document.getElementById('confidenceChart').getContext('2d');
+            confidenceChartInstance = new Chart(ctx2, {
+                type: 'doughnut',
+                data: getConfidenceData(),
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 10, usePointStyle: true } }
+                    },
+                    layout: { padding: 10 }
+                }
+            });
+        }
+
+        function updateCharts() {
+            // Update District Chart
+            const dData = getDistrictData();
+            districtChartInstance.data.labels = dData.labels;
+            districtChartInstance.data.datasets = dData.datasets;
+            districtChartInstance.update();
+
+            // Update Confidence Chart
+            const cData = getConfidenceData();
+            confidenceChartInstance.data.datasets[0].data = cData.datasets[0].data;
+            confidenceChartInstance.update();
+        }
+
+        function getDistrictData() {
+            // Aggregate high, medium, tight per district
+            const agg = {};
+            filteredData.forEach(item => {
+                if (!agg[item.district]) agg[item.district] = { High: 0, Medium: 0, Tight: 0 };
+                agg[item.district][item.prob]++;
+            });
+            
+            // Sort by total count desc
+            const sortedLabels = Object.keys(agg).sort((a,b) => {
+                const totalA = agg[a].High + agg[a].Medium + agg[a].Tight;
+                const totalB = agg[b].High + agg[b].Medium + agg[b].Tight;
+                return totalB - totalA;
+            }).slice(0, 10); // Top 10
+
+            return {
+                labels: sortedLabels,
+                datasets: [
+                    {
+                        label: 'High',
+                        data: sortedLabels.map(l => agg[l].High),
+                        backgroundColor: '#39ff14',
+                        barPercentage: 0.6
+                    },
+                    {
+                        label: 'Medium',
+                        data: sortedLabels.map(l => agg[l].Medium),
+                        backgroundColor: '#fcee0a',
+                        barPercentage: 0.6
+                    },
+                    {
+                        label: 'Tight',
+                        data: sortedLabels.map(l => agg[l].Tight),
+                        backgroundColor: '#ff7700',
+                        barPercentage: 0.6
+                    }
+                ]
+            };
+        }
+
+        function getConfidenceData() {
+            const high = filteredData.filter(i => i.prob === 'High').length;
+            const med = filteredData.filter(i => i.prob === 'Medium').length;
+            const tight = filteredData.filter(i => i.prob === 'Tight').length;
+
+            return {
+                labels: ['High', 'Medium', 'Tight'],
+                datasets: [{
+                    data: [high, med, tight],
+                    backgroundColor: ['#39ff14', '#fcee0a', '#ff7700'],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            };
+        }
+
+        // --- UTILS ---
+        function animateValue(id, start, end, duration) {
+            if (start === end) return;
+            const range = end - start;
+            let current = start;
+            const increment = end > start ? 1 : -1;
+            const stepTime = Math.abs(Math.floor(duration / range));
+            const obj = document.getElementById(id);
+            if(!obj) return;
+            
+            // Clear existing interval if any
+            if(obj.timer) clearInterval(obj.timer);
+            
+            obj.timer = setInterval(function() {
+                current += increment;
+                obj.innerHTML = current;
+                if (current == end) {
+                    clearInterval(obj.timer);
+                }
+            }, stepTime || 10);
+        }
+
+    </script>
+</body>
+</html>
