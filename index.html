@@ -219,30 +219,68 @@
         
         /* Mobile-first responsive design */
         @media (max-width: 767px) {
-            nav { padding: 0.75rem 0; }
-            nav > div { padding: 0 1rem !important; flex-wrap: wrap; gap: 1rem; }
-            nav h1 { font-size: 1.25rem !important; }
-            nav .text-xs { font-size: 0.65rem !important; }
-            nav .flex.items-center.gap-4 { width: 100%; justify-content: space-between; margin-left: 0; }
-            nav .flex.items-center.gap-4 > div { font-size: 0.7rem; }
+            /* Navbar compact layout */
+            nav { padding: 0.5rem 0; }
+            nav > div { 
+                padding: 0 0.75rem !important; 
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 0.5rem;
+            }
+            nav h1 { font-size: 1.125rem !important; line-height: 1.2 !important; }
+            nav .text-xs { font-size: 0.6rem !important; line-height: 1.2 !important; }
+            nav .flex.items-center.gap-4 { 
+                width: 100%; 
+                justify-content: flex-end !important;
+                margin-left: 0;
+                gap: 0.5rem !important;
+            }
+            nav .flex.items-center.gap-4 > div:first-child { 
+                padding: 0.25rem 0.5rem !important;
+                font-size: 0.6rem !important;
+            }
+            nav .flex.items-center.gap-4 > div:last-child { 
+                font-size: 0.6rem !important;
+            }
+            nav .flex.items-center.gap-4 .text-xs { font-size: 0.55rem !important; }
+            nav .flex.items-center.gap-4 .text-sm { font-size: 0.65rem !important; }
             
-            main { padding: 1rem 0.5rem !important; }
-            .container { padding: 0 1rem !important; }
+            /* Main content */
+            main { padding: 1rem 0.75rem !important; }
+            .container { padding: 0 0.75rem !important; }
             
+            /* Tabs - make scrollable horizontally */
             .tab-button { 
-                font-size: 0.7rem !important; 
+                font-size: 0.65rem !important; 
                 padding: 0.5rem 0.75rem !important;
-                letter-spacing: 0.05em !important;
+                letter-spacing: 0.02em !important;
+                white-space: nowrap !important;
+                min-width: fit-content !important;
             }
             
-            .glass-panel { padding: 1rem !important; }
+            section.glass-panel:has(.tab-button) {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+            }
             
-            .text-5xl { font-size: 2rem !important; }
-            .text-4xl { font-size: 1.75rem !important; }
-            .text-2xl { font-size: 1.25rem !important; }
-            .text-xl { font-size: 1rem !important; }
+            /* Glass panels more compact */
+            .glass-panel { padding: 0.875rem !important; }
             
-            .grid { gap: 1rem !important; }
+            /* Typography smaller */
+            .text-5xl { font-size: 1.75rem !important; line-height: 1.2 !important; }
+            .text-4xl { font-size: 1.5rem !important; line-height: 1.2 !important; }
+            .text-2xl { font-size: 1.125rem !important; line-height: 1.2 !important; }
+            .text-xl { font-size: 0.95rem !important; line-height: 1.2 !important; }
+            
+            /* Force single column for cards */
+            .grid.grid-cols-1,
+            .grid.md\\:grid-cols-2,
+            .grid.xl\\:grid-cols-3,
+            .grid.lg\\:grid-cols-3,
+            .grid.lg\\:grid-cols-4 { 
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
         }
         
         @media (min-width: 640px) {
