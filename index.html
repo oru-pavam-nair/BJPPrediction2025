@@ -1575,22 +1575,22 @@
             
             // Confidence filter
             if (confFilter === 'High') {
-                filtered = filtered.filter(i => i.dheerajProb === 'High' || i.piSeatCall === 'BJP Ahead');
+                filtered = filtered.filter(i => (i.dheeraj && i.dheeraj.prob === 'High') || (i.piTeam && i.piTeam.seatCall === 'BJP Ahead'));
             } else if (confFilter === 'Medium') {
-                filtered = filtered.filter(i => i.dheerajProb === 'Medium' || i.piSeatCall === 'Deadheat');
+                filtered = filtered.filter(i => (i.dheeraj && i.dheeraj.prob === 'Medium') || (i.piTeam && i.piTeam.seatCall === 'Deadheat'));
             } else if (confFilter === 'Tight') {
-                filtered = filtered.filter(i => i.dheerajProb === 'Tight' || i.piSeatCall === 'BJP Behind');
+                filtered = filtered.filter(i => (i.dheeraj && i.dheeraj.prob === 'Tight') || (i.piTeam && i.piTeam.seatCall === 'BJP Behind'));
             } else if (confFilter === 'Agree') {
                 filtered = filtered.filter(i => {
                     if (!i.hasBoth) return false;
                     const dMap = { 'High': 'BJP Ahead', 'Medium': 'Deadheat', 'Tight': 'BJP Behind' };
-                    return dMap[i.dheerajProb] === i.piSeatCall;
+                    return dMap[i.dheeraj.prob] === i.piTeam.seatCall;
                 });
             } else if (confFilter === 'Disagree') {
                 filtered = filtered.filter(i => {
                     if (!i.hasBoth) return false;
                     const dMap = { 'High': 'BJP Ahead', 'Medium': 'Deadheat', 'Tight': 'BJP Behind' };
-                    return dMap[i.dheerajProb] !== i.piSeatCall;
+                    return dMap[i.dheeraj.prob] !== i.piTeam.seatCall;
                 });
             }
             
