@@ -272,14 +272,43 @@
             .text-2xl { font-size: 1.125rem !important; line-height: 1.2 !important; }
             .text-xl { font-size: 0.95rem !important; line-height: 1.2 !important; }
             
-            /* Force single column for cards */
-            .grid.grid-cols-1,
-            .grid.md\\:grid-cols-2,
-            .grid.xl\\:grid-cols-3,
-            .grid.lg\\:grid-cols-3,
-            .grid.lg\\:grid-cols-4 { 
+            /* Force single column for ALL grids on mobile */
+            #gridContainer,
+            #piGridContainer,
+            #compGridContainer,
+            section.grid {
+                display: grid !important;
                 grid-template-columns: 1fr !important;
                 gap: 1rem !important;
+            }
+            
+            /* Stats grid - stack vertically */
+            section.grid.lg\\:grid-cols-3,
+            section.grid.lg\\:grid-cols-4 {
+                grid-template-columns: 1fr !important;
+            }
+            
+            /* Card content - prevent overflow */
+            .glass-panel > div {
+                overflow: hidden;
+                word-wrap: break-word;
+            }
+            
+            /* Filter section - stack vertically */
+            .flex.flex-wrap {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            
+            .flex.flex-wrap > div {
+                width: 100% !important;
+                margin-bottom: 0.5rem;
+            }
+            
+            /* Search input full width */
+            input[type="text"],
+            select {
+                width: 100% !important;
             }
         }
         
