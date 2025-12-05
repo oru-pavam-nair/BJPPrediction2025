@@ -246,25 +246,34 @@
             nav .flex.items-center.gap-4 .text-sm { font-size: 0.65rem !important; }
             
             /* Main content */
-            main { padding: 1rem 0.75rem !important; }
-            .container { padding: 0 0.75rem !important; }
+            main { padding: 1rem 0.5rem !important; }
+            .container { padding: 0 0.5rem !important; }
             
-            /* Tabs - make scrollable horizontally */
-            .tab-button { 
-                font-size: 0.65rem !important; 
-                padding: 0.5rem 0.75rem !important;
-                letter-spacing: 0.02em !important;
-                white-space: nowrap !important;
-                min-width: fit-content !important;
-            }
-            
-            section.glass-panel:has(.tab-button) {
+            /* Tab container - horizontal scroll */
+            section.glass-panel.rounded-lg.p-2 {
+                padding: 0.5rem !important;
                 overflow-x: auto !important;
                 -webkit-overflow-scrolling: touch;
             }
             
+            section.glass-panel.rounded-lg.p-2 > .flex {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                gap: 0.25rem !important;
+                min-width: max-content;
+            }
+            
+            /* Tabs - smaller and fit screen */
+            .tab-button { 
+                font-size: 0.55rem !important; 
+                padding: 0.4rem 0.5rem !important;
+                letter-spacing: 0.01em !important;
+                white-space: nowrap !important;
+                flex: 0 0 auto !important;
+            }
+            
             /* Glass panels more compact */
-            .glass-panel { padding: 0.875rem !important; }
+            .glass-panel { padding: 0.75rem !important; }
             
             /* Typography smaller */
             .text-5xl { font-size: 1.75rem !important; line-height: 1.2 !important; }
