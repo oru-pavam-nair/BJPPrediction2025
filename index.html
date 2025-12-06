@@ -3328,7 +3328,7 @@
         
         // --- PI TEAM FUNCTIONS ---
         function populatePIDistricts() {
-            const districts = [...new Set(piTeamData.filter(i => i.seatCall).map(item => item.district))].sort();
+            const districts = [...new Set(piTeamData.filter(i => i.seatCall).map(item => normalizeDistrict(item.district)))].sort();
             const select = document.getElementById('piDistrictFilter');
             select.innerHTML = '<option value="All">All Districts</option>';
             districts.forEach(d => {
@@ -3473,10 +3473,11 @@
             const agg = {};
             filteredPIData.forEach(item => {
                 if (!item.seatCall) return;
-                if (!agg[item.district]) agg[item.district] = { Ahead: 0, Deadheat: 0, Behind: 0 };
-                if (item.seatCall === 'BJP Ahead') agg[item.district].Ahead++;
-                else if (item.seatCall === 'Deadheat') agg[item.district].Deadheat++;
-                else if (item.seatCall === 'BJP Behind') agg[item.district].Behind++;
+                const dist = normalizeDistrict(item.district);
+                if (!agg[dist]) agg[dist] = { Ahead: 0, Deadheat: 0, Behind: 0 };
+                if (item.seatCall === 'BJP Ahead') agg[dist].Ahead++;
+                else if (item.seatCall === 'Deadheat') agg[dist].Deadheat++;
+                else if (item.seatCall === 'BJP Behind') agg[dist].Behind++;
             });
             
             const sortedLabels = Object.keys(agg).sort((a,b) => {
@@ -3622,13 +3623,13 @@
         function getDistrictCoverageData() {
             // Get all districts from both sources
             const allDistricts = new Set();
-            rawData.forEach(d => allDistricts.add(d.district));
-            piTeamData.forEach(d => allDistricts.add(d.district));
+            rawData.forEach(d => allDistricts.add(normalizeDistrict(d.district)));
+            piTeamData.forEach(d => allDistricts.add(normalizeDistrict(d.district)));
             
             const districts = Array.from(allDistricts).sort();
             
-            const dheerajCounts = districts.map(dist => rawData.filter(d => d.district === dist).length);
-            const piCounts = districts.map(dist => piTeamData.filter(d => d.district === dist).length);
+            const dheerajCounts = districts.map(dist => rawData.filter(d => normalizeDistrict(d.district) === dist).length);
+            const piCounts = districts.map(dist => piTeamData.filter(d => normalizeDistrict(d.district) === dist).length);
             
             // Only show top 10 districts by total coverage
             const districtTotals = districts.map((dist, idx) => ({
@@ -3696,7 +3697,7 @@
         }
         
         function populateComparisonDistricts() {
-            const districts = [...new Set(comparisonData.map(item => item.district))].sort();
+            const districts = [...new Set(comparisonData.map(item => normalizeDistrict(item.district)))].sort();
             const select = document.getElementById('compDistrictFilter');
             select.innerHTML = '<option value="All">All Districts</option>';
             districts.forEach(d => {
@@ -3796,7 +3797,7 @@
             filteredPIData = piTeamData.filter(item => {
                 if (!item.seatCall) return false;
                 const matchesSearch = item.name.toLowerCase().includes(searchTerm);
-                const matchesDist = distFilter === 'All' || item.district === distFilter;
+                const matchesDist = distFilter === 'All' || normalizeDistrict(item.district) === distFilter;
                 const matchesSeatCall = seatCallFilter === 'All' || item.seatCall === seatCallFilter;
                 return matchesSearch && matchesDist && matchesSeatCall;
             });
@@ -3822,7 +3823,7 @@
             
             let filtered = comparisonData.filter(item => {
                 const matchesSearch = item.name.toLowerCase().includes(searchTerm);
-                const matchesDist = distFilter === 'All' || item.district === distFilter;
+                const matchesDist = distFilter === 'All' || normalizeDistrict(item.district) === distFilter;
                 return matchesSearch && matchesDist;
             });
             
@@ -3889,7 +3890,7 @@
         // --- LOGIC FUNCTIONS ---
 
         function populateDistricts() {
-            const districts = [...new Set(rawData.map(item => item.district))].sort();
+            const districts = [...new Set(rawData.map(item => normalizeDistrict(item.district)))].sort();
             const select = document.getElementById('districtFilter');
             districts.forEach(d => {
                 const option = document.createElement('option');
@@ -3915,7 +3916,7 @@
             filteredData = rawData.filter(item => {
                 const matchesSearch = item.name.toLowerCase().includes(searchTerm) || 
                                       item.note.toLowerCase().includes(searchTerm);
-                const matchesDist = distFilter === 'All' || item.district === distFilter;
+                const matchesDist = distFilter === 'All' || normalizeDistrict(item.district) === distFilter;
                 
                 let matchesProb = true;
                 if (probFilter === 'High') matchesProb = item.prob === 'High';
@@ -4074,8 +4075,9 @@
             // Aggregate high, medium, tight per district
             const agg = {};
             filteredData.forEach(item => {
-                if (!agg[item.district]) agg[item.district] = { High: 0, Medium: 0, Tight: 0 };
-                agg[item.district][item.prob]++;
+                const dist = normalizeDistrict(item.district);
+                if (!agg[dist]) agg[dist] = { High: 0, Medium: 0, Tight: 0 };
+                agg[dist][item.prob]++;
             });
             
             // Sort by total count desc
@@ -4127,6 +4129,13 @@
         }
 
         // --- UTILS ---
+        function normalizeDistrict(district) {
+            if (!district) return '';
+            const d = district.trim();
+            if (d.toLowerCase() === 'trivandrum') return 'Thiruvananthapuram';
+            return d;
+        }
+
         function animateValue(id, start, end, duration) {
             if (start === end) return;
             const range = end - start;
